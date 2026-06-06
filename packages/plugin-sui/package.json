@@ -1,0 +1,30 @@
+{
+  "name": "@kairos/plugin-sui",
+  "version": "0.0.1",
+  "description": "KAIROS Sui plugin — transfer, swap, stake, read-object actions and balance/price providers.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "dev": "tsup src/index.ts --format esm --dts --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "dependencies": {
+    "@kairos/core": "workspace:*",
+    "@mysten/sui": "^1.45.0",
+    "zod": "^4.4.0"
+  }
+}

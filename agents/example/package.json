@@ -1,0 +1,22 @@
+{
+  "name": "@kairos/agent-example",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Atlas — the reference KAIROS agent.",
+  "type": "module",
+  "scripts": {
+    "start": "tsx index.ts",
+    "dev": "tsx watch index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@kairos/client-rest": "workspace:*",
+    "@kairos/core": "workspace:*",
+    "@kairos/plugin-sui": "workspace:*",
+    "@kairos/plugin-walrus": "workspace:*",
+    "dotenv": "^17.4.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0"
+  }
+}
