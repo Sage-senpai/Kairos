@@ -58,6 +58,53 @@ importers:
         specifier: ^4.19.0
         version: 4.22.4
 
+  agents/oracle:
+    dependencies:
+      '@kairos/client-rest':
+        specifier: workspace:*
+        version: link:../../packages/client-rest
+      '@kairos/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@kairos/plugin-sui':
+        specifier: workspace:*
+        version: link:../../packages/plugin-sui
+      '@kairos/plugin-walrus':
+        specifier: workspace:*
+        version: link:../../packages/plugin-walrus
+      dotenv:
+        specifier: ^17.4.0
+        version: 17.4.2
+    devDependencies:
+      tsx:
+        specifier: ^4.19.0
+        version: 4.22.4
+
+  agents/sentinel:
+    dependencies:
+      '@kairos/client-rest':
+        specifier: workspace:*
+        version: link:../../packages/client-rest
+      '@kairos/client-telegram':
+        specifier: workspace:*
+        version: link:../../packages/client-telegram
+      '@kairos/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@kairos/plugin-sui':
+        specifier: workspace:*
+        version: link:../../packages/plugin-sui
+      '@kairos/plugin-walrus':
+        specifier: workspace:*
+        version: link:../../packages/plugin-walrus
+      dotenv:
+        specifier: ^17.4.0
+        version: 17.4.2
+    devDependencies:
+      tsx:
+        specifier: ^4.19.0
+        version: 4.22.4
+
   packages/client-rest:
     dependencies:
       '@kairos/core':
@@ -74,6 +121,16 @@ importers:
         specifier: ^5.0.0
         version: 5.0.6
 
+  packages/client-telegram:
+    dependencies:
+      '@kairos/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@mysten/sui':
+        specifier: ^1.45.0
+        version: 1.45.2(typescript@5.9.3)
+
   packages/core:
     dependencies:
       '@anthropic-ai/sdk':
@@ -82,6 +139,8 @@ importers:
       '@mysten/sui':
         specifier: ^1.45.0
         version: 1.45.2(typescript@5.9.3)
+
+  packages/create-kairos-agent: {}
 
   packages/plugin-sui:
     dependencies:

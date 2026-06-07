@@ -3,8 +3,7 @@ import { z } from 'zod';
 import type { Action } from '@kairos/core';
 import { suiToMist, truncateAddress } from '@kairos/core';
 
-const SUI_SYSTEM_STATE_ID =
-  '0x0000000000000000000000000000000000000000000000000000000000000005';
+const SUI_SYSTEM_STATE_ID = '0x0000000000000000000000000000000000000000000000000000000000000005';
 const STAKE_FUNCTION = '0x3::sui_system::request_add_stake';
 
 const paramsSchema = z.object({
@@ -59,11 +58,7 @@ export const stakeSuiAction: Action = {
     const [stakeCoin] = tx.splitCoins(tx.gas, [suiToMist(amount)]);
     tx.moveCall({
       target: STAKE_FUNCTION,
-      arguments: [
-        tx.object(SUI_SYSTEM_STATE_ID),
-        stakeCoin,
-        tx.pure.address(validatorAddress),
-      ],
+      arguments: [tx.object(SUI_SYSTEM_STATE_ID), stakeCoin, tx.pure.address(validatorAddress)],
     });
 
     const result = await runtime.suiClient.signAndExecuteTransaction({
@@ -71,6 +66,7 @@ export const stakeSuiAction: Action = {
       transaction: tx,
       options: { showEffects: true },
     });
+    await runtime.suiClient.waitForTransaction({ digest: result.digest });
 
     callback({
       text:

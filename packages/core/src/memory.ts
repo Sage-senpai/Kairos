@@ -20,9 +20,7 @@ export class MemoryManager implements IMemoryManager {
 
     for (const hook of this.hooks) {
       try {
-        await Promise.resolve(hook(memory)).catch((err) =>
-          logger.error('Memory hook failed', err),
-        );
+        await Promise.resolve(hook(memory)).catch((err) => logger.error('Memory hook failed', err));
       } catch (err) {
         logger.error('Memory hook threw synchronously', err);
       }

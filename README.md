@@ -42,9 +42,11 @@ The name comes from the Greek word *kairos* — the opportune moment, the right 
 | Package | Description |
 |---|---|
 | [`@kairos/core`](packages/core) | `AgentRuntime`, `MemoryManager`, `LLMProvider`, all TypeScript interfaces |
-| [`@kairos/plugin-sui`](packages/plugin-sui) | Transfer SUI, swap on DeepBook, read objects, balance and price providers |
-| [`@kairos/plugin-walrus`](packages/plugin-walrus) | Persistent memory on Walrus, store/retrieve action |
+| [`@kairos/plugin-sui`](packages/plugin-sui) | Transfer SUI, swap on DeepBook, stake, read objects, balance and price providers |
+| [`@kairos/plugin-walrus`](packages/plugin-walrus) | Persistent memory on Walrus, store/retrieve actions, on-chain index (Move) |
 | [`@kairos/client-rest`](packages/client-rest) | Express REST server — any client can talk to an agent over HTTP |
+| [`@kairos/client-telegram`](packages/client-telegram) | Telegram bot client — drive an agent from a chat |
+| [`create-kairos-agent`](packages/create-kairos-agent) | Scaffold a new agent with one command |
 
 ---
 

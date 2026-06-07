@@ -68,9 +68,9 @@ export class AgentRuntime implements IAgentRuntime {
     if (plugin.onRegister) {
       // plugin onRegister bodies assign suiClient/keypair synchronously before
       // their first await, so the fields are set by the time this returns.
-      void plugin.onRegister(this).catch((err) =>
-        logger.error(`Plugin "${plugin.name}" onRegister failed`, err),
-      );
+      void plugin
+        .onRegister(this)
+        .catch((err) => logger.error(`Plugin "${plugin.name}" onRegister failed`, err));
     }
     logger.info(`Registered plugin "${plugin.name}" (${plugin.actions.length} actions)`);
   }

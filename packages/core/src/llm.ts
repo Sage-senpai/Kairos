@@ -34,9 +34,7 @@ export class LLMProvider implements ILLMProvider {
   ): Promise<string> {
     const system = this.buildSystemPrompt(state, character);
     const tools = this.buildTools(actions);
-    const messages: Anthropic.MessageParam[] = [
-      { role: 'user', content: message.content.text },
-    ];
+    const messages: Anthropic.MessageParam[] = [{ role: 'user', content: message.content.text }];
 
     logger.debug(`LLM system prompt:\n${system}`);
 

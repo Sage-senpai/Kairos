@@ -38,3 +38,6 @@ pnpm-debug.log*
 # Temporary
 tmp/
 temp/
+
+# KAIROS local Walrus memory index (per-agent, device-specific)
+.kairos/

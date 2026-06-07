@@ -1,0 +1,8 @@
+node_modules
+dist
+coverage
+pnpm-lock.yaml
+.kairos
+
+# Long-form prose docs are hand-formatted — leave them as authored.
+*.md

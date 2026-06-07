@@ -29,6 +29,7 @@ describe('transferSuiAction', () => {
       suiClient: {
         getBalance: vi.fn().mockResolvedValue({ totalBalance: '5000000000' }),
         signAndExecuteTransaction: vi.fn().mockResolvedValue({ digest: 'FakeTxDigest123' }),
+        waitForTransaction: vi.fn().mockResolvedValue({}),
       },
       getSetting: vi.fn().mockReturnValue(''),
       character: { suiNetwork: 'testnet' },
@@ -56,9 +57,7 @@ describe('transferSuiAction', () => {
       callback,
     );
     expect(runtime.suiClient.signAndExecuteTransaction).toHaveBeenCalledOnce();
-    expect(callback).toHaveBeenCalledWith(
-      expect.objectContaining({ txDigest: 'FakeTxDigest123' }),
-    );
+    expect(callback).toHaveBeenCalledWith(expect.objectContaining({ txDigest: 'FakeTxDigest123' }));
   });
 
   it('rejects invalid parameters without signing', async () => {

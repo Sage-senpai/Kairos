@@ -29,6 +29,7 @@ describe('stakeSuiAction', () => {
       suiClient: {
         getBalance: vi.fn().mockResolvedValue({ totalBalance: '5000000000' }),
         signAndExecuteTransaction: vi.fn().mockResolvedValue({ digest: 'FakeTxDigest123' }),
+        waitForTransaction: vi.fn().mockResolvedValue({}),
       },
       getSetting: vi.fn().mockReturnValue(''),
       character: { suiNetwork: 'testnet' },
@@ -55,9 +56,7 @@ describe('stakeSuiAction', () => {
       { amount: 2, validatorAddress: '0x' + 'a'.repeat(64) },
       callback,
     );
-    expect(callback).toHaveBeenCalledWith(
-      expect.objectContaining({ txDigest: 'FakeTxDigest123' }),
-    );
+    expect(callback).toHaveBeenCalledWith(expect.objectContaining({ txDigest: 'FakeTxDigest123' }));
   });
 
   it('handles invalid params gracefully', async () => {

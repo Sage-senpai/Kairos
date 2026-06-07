@@ -60,6 +60,7 @@ export const transferSuiAction: Action = {
       transaction: tx,
       options: { showEffects: true },
     });
+    await runtime.suiClient.waitForTransaction({ digest: result.digest });
 
     callback({
       text: `Sent ${amount} SUI to ${truncateAddress(recipient)}. Transaction confirmed.`,

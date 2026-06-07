@@ -1,0 +1,10 @@
+[package]
+name = "kairos_memory"
+edition = "2024.beta"
+license = "MIT"
+
+[dependencies]
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/testnet" }
+
+[addresses]
+kairos_memory = "0x0"

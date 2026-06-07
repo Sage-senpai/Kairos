@@ -25,6 +25,7 @@ function makeRuntime(network: string): AgentRuntime {
     keypair: {},
     suiClient: {
       signAndExecuteTransaction: vi.fn().mockResolvedValue({ digest: 'SwapDigest123' }),
+      waitForTransaction: vi.fn().mockResolvedValue({}),
     },
     getSetting: vi.fn().mockReturnValue(''),
     character: { suiNetwork: network },
@@ -60,9 +61,7 @@ describe('swapTokensAction', () => {
       callback,
     );
     expect(runtime.suiClient.signAndExecuteTransaction).toHaveBeenCalledOnce();
-    expect(callback).toHaveBeenCalledWith(
-      expect.objectContaining({ txDigest: 'SwapDigest123' }),
-    );
+    expect(callback).toHaveBeenCalledWith(expect.objectContaining({ txDigest: 'SwapDigest123' }));
   });
 
   it('rejects invalid params without signing', async () => {

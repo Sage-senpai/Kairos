@@ -1,4 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { rm } from 'node:fs/promises';
 import { WalrusMemoryStore } from '../memory-store';
 
 afterEach(() => {
@@ -76,5 +79,42 @@ describe('WalrusMemoryStore', () => {
         createdAt: Date.now(),
       }),
     ).resolves.toBeUndefined();
+  });
+});
+
+describe('WalrusMemoryStore persistence (cross-session)', () => {
+  it('reloads the blob index from disk on init', async () => {
+    const indexPath = join(tmpdir(), `kairos-test-${Math.random().toString(36).slice(2)}.json`);
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ newlyCreated: { blobObject: { blobId: 'PERSISTED_BLOB' } } }),
+      }),
+    );
+
+    try {
+      // Session 1: store a record, which writes the index to disk.
+      const first = new WalrusMemoryStore(undefined, undefined, { indexPath });
+      await first.init();
+      await first.store('remember me', 'note');
+      expect(first.getRecent()).toHaveLength(1);
+
+      // Session 2: a fresh store loads the prior record from disk.
+      const second = new WalrusMemoryStore(undefined, undefined, { indexPath });
+      await second.init();
+      expect(second.getRecent()).toHaveLength(1);
+      expect(second.getRecent()[0]?.blobId).toBe('PERSISTED_BLOB');
+    } finally {
+      await rm(indexPath, { force: true });
+    }
+  });
+
+  it('starts empty when no index file exists yet', async () => {
+    const store = new WalrusMemoryStore(undefined, undefined, {
+      indexPath: join(tmpdir(), `kairos-missing-${Math.random().toString(36).slice(2)}.json`),
+    });
+    await store.init();
+    expect(store.getRecent()).toHaveLength(0);
   });
 });
