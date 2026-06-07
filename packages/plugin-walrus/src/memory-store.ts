@@ -71,7 +71,7 @@ export class WalrusMemoryStore {
 
   /** Store raw content on Walrus and return the resulting blob record. */
   async store(content: string, label?: string): Promise<BlobRecord> {
-    const res = await fetch(`${this.publisherUrl}/v1/store?epochs=${STORE_EPOCHS}`, {
+    const res = await fetch(`${this.publisherUrl}/v1/blobs?epochs=${STORE_EPOCHS}`, {
       method: 'PUT',
       body: content,
     });
@@ -111,7 +111,7 @@ export class WalrusMemoryStore {
   /** Retrieve a blob's content by id, or null if it cannot be read. */
   async retrieve(blobId: string): Promise<string | null> {
     try {
-      const res = await fetch(`${this.aggregatorUrl}/v1/${blobId}`);
+      const res = await fetch(`${this.aggregatorUrl}/v1/blobs/${blobId}`);
       if (!res.ok) return null;
       return await res.text();
     } catch {

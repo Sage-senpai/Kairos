@@ -178,7 +178,7 @@ MemoryManager.add(memory)
         └── Async: WalrusMemoryStore.store(memory) → blobId
                          │
                          ▼
-              Walrus Publisher API (PUT /v1/store)
+              Walrus Publisher API (PUT /v1/blobs)
                          │
                          ▼
               Returns blobId → stored in onchain index*
@@ -194,7 +194,7 @@ Agent needs long-term memory
 WalrusMemoryProvider.get(runtime, message)
         │
         ├── Read onchain index → get last N blobIds for this agent
-        ├── Fetch each blob from Walrus Aggregator (GET /v1/{blobId})
+        ├── Fetch each blob from Walrus Aggregator (GET /v1/blobs/{blobId})
         └── Deserialise Memory objects → inject as context string into State
 ```
 

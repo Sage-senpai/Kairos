@@ -9,20 +9,23 @@ afterEach(() => {
 });
 
 describe('WalrusMemoryStore', () => {
-  it('stores content and extracts the blobId from newlyCreated', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: async () => ({ newlyCreated: { blobObject: { blobId: 'BLOB_NEW' } } }),
-      }),
-    );
+  it('stores content via PUT /v1/blobs and extracts the blobId from newlyCreated', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ newlyCreated: { blobObject: { blobId: 'BLOB_NEW' } } }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
 
     const store = new WalrusMemoryStore();
     const record = await store.store('hello world', 'greeting');
     expect(record.blobId).toBe('BLOB_NEW');
     expect(record.summary).toBe('greeting');
     expect(store.getRecent()).toHaveLength(1);
+    // Lock the current Walrus endpoint: PUT /v1/blobs?epochs=N
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('/v1/blobs?epochs='),
+      expect.objectContaining({ method: 'PUT' }),
+    );
   });
 
   it('extracts the blobId from alreadyCertified', async () => {
@@ -49,14 +52,13 @@ describe('WalrusMemoryStore', () => {
     await expect(store.store('too big')).rejects.toThrow('Walrus store failed: 413');
   });
 
-  it('retrieves blob content from the aggregator', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({ ok: true, text: async () => 'stored content' }),
-    );
+  it('retrieves blob content from the aggregator at /v1/blobs/:id', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => 'stored content' });
+    vi.stubGlobal('fetch', fetchMock);
 
     const store = new WalrusMemoryStore();
     expect(await store.retrieve('BLOB_NEW')).toBe('stored content');
+    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('/v1/blobs/BLOB_NEW'));
   });
 
   it('returns null when retrieval fails', async () => {
