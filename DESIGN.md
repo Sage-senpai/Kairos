@@ -18,9 +18,11 @@
 
 ## The core tension
 
-Sui's identity is **oceanic** — fluid, blue, fast, expansive. KAIROS is **electric** — precise, violet, sharp, intentional. The two coexist because agents are the intentional force moving through Sui's fluid environment. The design expresses this through the **violet → teal gradient**: violet (decision, intelligence, AI) flowing into teal (action, execution, on-chain).
+KAIROS is an arcane instrument. An agent waits in the dark for its moment, then acts with intent. The identity leans into that. A blood-crimson carries the act itself. An arcane gold carries the marks and sigils around it. Both sit on a near-black so they read like firelight in a vault.
 
-Never use Sui's exact blue (`#4CA3FF`) as a KAIROS brand colour. Reference it only when literally displaying Sui branding within a KAIROS interface.
+Crimson is the wound of colour: the moment of action, used once per screen. Gold is the rune: the label, the seal, the link. Everything else is bone and shadow.
+
+The palette is drawn from the sorcerer archetype (crimson cloak, gilded sigils) rather than the old oceanic-violet scheme, which read as a generic AI default. Use Sui's blue (`#4CA3FF`) only when you are literally displaying Sui's own branding.
 
 ---
 
@@ -29,50 +31,53 @@ Never use Sui's exact blue (`#4CA3FF`) as a KAIROS brand colour. Reference it on
 ### Core palette
 
 ```
---kairos-void      #09090F    Background. Near-black with the faintest blue undertone.
---kairos-surface   #111119    Card and panel backgrounds.
---kairos-surface-2 #18181F    Elevated surfaces, hover states.
---kairos-border    #252535    Borders and dividers.
---kairos-muted     #6B6B8A    Placeholder text, disabled states, captions.
---kairos-text      #EBEBF5    Primary text. Warm white with a violet cast.
---kairos-text-2    #A8A8C0    Secondary text.
+--kairos-void      #16110E    Background. Near-black with a warm, ashen undertone.
+--kairos-surface   #1C1714    Card and panel backgrounds.
+--kairos-surface-2 #241D18    Elevated surfaces, hover states.
+--kairos-border    #3A2F26    Borders and dividers (used at low opacity).
+--kairos-muted     #8A7B6B    Placeholder text, captions, disabled states.
+--kairos-bone      #EDE6DA    Primary text. Warm parchment white.
+--kairos-bone-2    #BCAE9C    Secondary text.
 
---kairos-violet    #7C3AED    Primary brand. Buttons, links, active states.
---kairos-violet-2  #9F67FF    Lighter violet. Hover on primary elements.
---kairos-violet-3  #C4A7FF    Even lighter. Focus rings, subtle highlights.
---kairos-teal      #2DD4BF    Secondary accent. Success states, on-chain actions.
---kairos-teal-2    #5EEAD4    Lighter teal. Hover on secondary elements.
+--kairos-crimson   #B11D22    Primary action. Buttons, the one emphasised word.
+--kairos-crimson-2 #D8332C    Lit crimson. Hover on primary, the [ACTION] mark.
+--kairos-gold      #E0B23C    Arcane accent. Sigils, labels, links, code keys.
+--kairos-gold-2    #F0CB66    Lit gold. Hover on gold elements, focus rings.
+--kairos-amber     #D9A441    Strings in code, gas cost indicators.
 
---kairos-amber     #F59E0B    Warning states, gas cost indicators.
---kairos-red       #EF4444    Error states, failed transactions.
---kairos-green     #22C55E    Confirmed transactions (use sparingly, prefer teal).
+--kairos-rust      #9A4A2A    Warning states.
+--kairos-blood     #8E1A1F    Error states, failed transactions.
 ```
 
-### The gradient
+### Accent discipline
 
-The KAIROS signature gradient runs **violet → teal**, left to right or top to bottom.
+There is no gradient. The old violet to teal blend is retired. Colour works through placement and restraint, not blends.
 
 ```css
-/* Standard gradient */
-background: linear-gradient(135deg, #7C3AED 0%, #2DD4BF 100%);
+/* The act: one crimson element per screen */
+.act {
+  background: #b11d22;
+  color: #ede6da;
+}
 
-/* Text gradient (use for hero headlines only) */
-background: linear-gradient(90deg, #9F67FF 0%, #5EEAD4 100%);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
+/* The rune: gold for small arcane marks */
+.rune {
+  color: #e0b23c;
+}
 
-/* Subtle border gradient (cards, highlights) */
-border-image: linear-gradient(135deg, #7C3AED, #2DD4BF) 1;
+/* Atmosphere: a faint vignette, never a body-wide gradient fill */
+background: radial-gradient(ellipse 110% 85% at 50% 8%, transparent 42%, #0d0a08 100%);
 ```
 
-**Rules for the gradient:**
-- Use on at most one element per screen. It is a signal, not a pattern.
-- Never use on body backgrounds — only on text, borders, or small accent elements.
-- The CLI spinner uses the gradient cycling through violet → teal shades.
+**Rules:**
+- Crimson appears at most once per screen: the primary action, or the single word that carries the sentence. Never two crimson elements competing.
+- Gold carries the small marks: the eyebrow label, section numbers, links, the wordmark glyph, code keys. It may repeat, quietly.
+- No gradient text, ever. Emphasis comes from weight, colour, or a thin gold underline.
+- A slow ward sigil and an edge vignette set the mood. Keep both faint enough that the content always wins.
 
 ### Dark mode is the only mode
 
-KAIROS is dark-first. There is no light mode. Agents run in terminals, dark IDEs, and dark Telegram themes. The design assumes `#09090F` backgrounds always.
+KAIROS is dark-first. There is no light mode. Agents run in terminals, dark IDEs, and dark Telegram themes. The design assumes `#16110E` backgrounds always.
 
 ---
 
@@ -107,7 +112,7 @@ Code:         13px / JetBrains Mono   / line-height 1.55
 
 ### Address formatting
 
-Sui addresses in KAIROS UI are always shown in the format `0x1234...abcd` — first 6 and last 4 characters. Monospace, colour `--kairos-teal`.
+Sui addresses in KAIROS UI are always shown in the format `0x1234...abcd`, first 6 and last 4 characters. Monospace, colour `--kairos-gold`.
 
 Transaction digests: show in full, monospace, wrapped, selectable.
 
@@ -121,12 +126,12 @@ Transaction digests: show in full, monospace, wrapped, selectable.
 The `K` is slightly larger (110% of cap height) and offset to suggest motion — an agent leaning into action.
 
 Colours:
-- On dark: `--kairos-text` (#EBEBF5) with the `K` in `--kairos-violet` (#7C3AED)
-- Gradient variant: full wordmark in the violet → teal gradient (hero use only)
+- On dark: `--kairos-bone` (#EDE6DA), with the `O` set in `--kairos-gold` (#E0B23C) as a small seal.
+- Never recolour the wordmark with a gradient. A single gold glyph is the only accent it gets.
 
 ### Symbol mark
 
-A geometric `K` constructed from two diagonal lines meeting at a vertical spine. The junction point emits a subtle glow in `--kairos-teal`. This is the favicon, avatar, and icon.
+A geometric `K` constructed from two diagonal lines meeting at a vertical spine. The junction carries a faint gold glow, like gilding catching candlelight. One glow, nowhere else. This is the favicon, avatar, and icon.
 
 ### Clear space
 
@@ -146,10 +151,10 @@ Minimum clear space around the logo: equal to the height of the letter `A` in th
 ### Buttons
 
 ```css
-/* Primary — for the one most important action on a screen */
+/* Primary: the one act on a screen. Crimson. */
 .btn-primary {
-  background: #7C3AED;
-  color: #EBEBF5;
+  background: #B11D22;
+  color: #EDE6DA;
   border: none;
   border-radius: 8px;
   padding: 10px 20px;
@@ -157,55 +162,56 @@ Minimum clear space around the logo: equal to the height of the letter `A` in th
   cursor: pointer;
   transition: background 0.15s;
 }
-.btn-primary:hover { background: #9F67FF; }
-.btn-primary:active { background: #6D28D9; transform: scale(0.98); }
+.btn-primary:hover { background: #D8332C; }
+.btn-primary:active { background: #8E1A1F; transform: scale(0.98); }
 
-/* Secondary — outlined */
+/* Secondary: outlined, with a gold edge on hover. */
 .btn-secondary {
   background: transparent;
-  color: #EBEBF5;
-  border: 0.5px solid #252535;
+  color: #EDE6DA;
+  border: 1px solid #3A2F26;
   border-radius: 8px;
   padding: 10px 20px;
   font: 500 14px/1 Inter;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 0.15s, color 0.15s;
 }
-.btn-secondary:hover { border-color: #6B6B8A; background: #111119; }
+.btn-secondary:hover { border-color: #E0B23C; color: #E0B23C; }
 
-/* Ghost — text only, for tertiary actions */
+/* Ghost: text only, for tertiary actions. */
 .btn-ghost {
   background: transparent;
-  color: #A8A8C0;
+  color: #BCAE9C;
   border: none;
   padding: 8px 12px;
   font: 400 14px/1 Inter;
   cursor: pointer;
 }
-.btn-ghost:hover { color: #EBEBF5; }
+.btn-ghost:hover { color: #EDE6DA; }
 ```
 
 ### Cards
 
 ```css
 .card {
-  background: #111119;
-  border: 0.5px solid #252535;
+  background: #1C1714;
+  border: 1px solid #3A2F26;
   border-radius: 12px;
   padding: 20px 24px;
 }
-.card:hover { border-color: #6B6B8A; }
+.card:hover { border-color: #8A7B6B; }
 
-/* Accent card — for featured/active states */
+/* Accent card: featured or active. A leading gold number, full hairline. */
 .card-accent {
-  border-left: 2px solid #7C3AED;
-  border-radius: 0 12px 12px 0;
+  border: 1px solid #3A2F26;
+  border-radius: 12px;
 }
+.card-accent .num { color: #E0B23C; }  /* the rune marks it, not a side stripe */
 
-/* Transaction card — shown after tx executes */
+/* Transaction card: shown after a tx executes. */
 .card-tx {
-  border: 0.5px solid #2DD4BF40;  /* teal at 25% opacity */
-  background: #0D1F1C;            /* very dark teal tint */
+  border: 1px solid #E0B23C40;  /* gold at 25% opacity */
+  background: #1F1708;          /* very dark warm tint */
 }
 ```
 
@@ -213,33 +219,33 @@ Minimum clear space around the logo: equal to the height of the letter `A` in th
 
 ```css
 .code-block {
-  background: #0D0D17;
-  border: 0.5px solid #252535;
+  background: #13100D;
+  border: 1px solid #3A2F26;
   border-radius: 8px;
   padding: 16px 20px;
   font: 400 13px/1.55 'JetBrains Mono', monospace;
-  color: #EBEBF5;
+  color: #EDE6DA;
   overflow-x: auto;
   tab-size: 2;
 }
 
 /* Syntax tokens */
-.token-keyword   { color: #C4A7FF; }  /* import, const, async */
-.token-string    { color: #86EFAC; }  /* green strings */
-.token-type      { color: #5EEAD4; }  /* types, interfaces */
-.token-comment   { color: #6B6B8A; }  /* comments */
-.token-number    { color: #FCA5A5; }  /* numbers */
-.token-function  { color: #9F67FF; }  /* function names */
+.token-keyword   { color: #E0B23C; }  /* import, const, async */
+.token-string    { color: #D9A441; }  /* strings */
+.token-type      { color: #BCAE9C; }  /* types, interfaces */
+.token-comment   { color: #8A7B6B; }  /* comments */
+.token-number    { color: #D8332C; }  /* numbers */
+.token-function  { color: #F0CB66; }  /* function names */
 ```
 
 ### Badges / pills
 
 ```css
 /* Status pills */
-.badge-live    { background: #14261E; color: #2DD4BF; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
-.badge-pending { background: #2A1F00; color: #F59E0B; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
-.badge-error   { background: #2A0A0A; color: #EF4444; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
-.badge-info    { background: #1A1230; color: #9F67FF; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+.badge-live    { background: #2A1F0A; color: #E0B23C; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+.badge-pending { background: #2A1A08; color: #D9A441; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+.badge-error   { background: #2A0C0A; color: #D8332C; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+.badge-info    { background: #221A14; color: #BCAE9C; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
 ```
 
 ---
@@ -258,9 +264,9 @@ logger.warn('Balance below 0.1 SUI');        // → [!] Balance below 0.1 SUI
 logger.error('Walrus store failed', err);    // → [✗] Walrus store failed
 ```
 
-Colours in the terminal:
-- `[KAIROS]` prefix: violet (`\x1b[35m`)
-- `[ACTION]` prefix: teal (`\x1b[36m`)
+Colours in the terminal. The brand crimson and gold appear on the two KAIROS prefixes; the level marks keep their conventional ANSI meanings so logs stay scannable:
+- `[KAIROS]` prefix: gold (`\x1b[93m`)
+- `[ACTION]` prefix: crimson (`\x1b[91m`)
 - `[✓]` success: green (`\x1b[32m`)
 - `[!]` warning: amber (`\x1b[33m`)
 - `[✗]` error: red (`\x1b[31m`)
@@ -290,8 +296,8 @@ All KAIROS docs follow these rules:
 
 For hackathon presentations:
 
-- **Background:** `#09090F` always
-- **Title slides:** wordmark top-left, hero text in gradient, single bold claim per slide
+- **Background:** `#16110E` always
+- **Title slides:** wordmark top-left, hero text in bone with one crimson word, single bold claim per slide
 - **Code slides:** full-bleed code block, dark background, syntax highlighting as above. Never screenshot VS Code — use the KAIROS code block style.
 - **Demo GIF:** record at 2× speed, no cursor effects, terminal only. Clean `zsh` or `fish` prompt.
 - **Max 12 slides:** Problem → Solution → How it works → Demo → Architecture → Traction → Ask

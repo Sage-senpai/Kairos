@@ -3,13 +3,13 @@
  * production code logs through this, never `console.log` directly.
  *
  * Prefix colours follow the KAIROS design system (see DESIGN.md):
- *   [KAIROS] violet · [ACTION] teal · [✓] green · [!] amber · [✗] red
+ *   [KAIROS] gold · [ACTION] crimson · [✓] success · [!] warn · [✗] error
  */
 const C = {
   reset: '\x1b[0m',
   dim: '\x1b[2m',
-  violet: '\x1b[35m',
-  teal: '\x1b[36m',
+  gold: '\x1b[93m',
+  crimson: '\x1b[91m',
   green: '\x1b[32m',
   amber: '\x1b[33m',
   red: '\x1b[31m',
@@ -31,11 +31,11 @@ function enabled(level: LogLevel): boolean {
 export const logger = {
   /** Framework lifecycle messages. */
   info(message: string): void {
-    if (enabled('info')) console.log(`${C.violet}[KAIROS]${C.reset} ${message}`);
+    if (enabled('info')) console.log(`${C.gold}[KAIROS]${C.reset} ${message}`);
   },
   /** An action is executing. */
   action(message: string): void {
-    if (enabled('info')) console.log(`${C.teal}[ACTION]${C.reset} ${message}`);
+    if (enabled('info')) console.log(`${C.crimson}[ACTION]${C.reset} ${message}`);
   },
   /** Something succeeded (e.g. a confirmed transaction). */
   success(message: string): void {
