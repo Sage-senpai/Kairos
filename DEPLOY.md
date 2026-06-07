@@ -151,7 +151,7 @@ sui client publish --gas-budget 100000000
 
 ## Deploy the website
 
-The site is one static file (`site/index.html` for the Doctor Strange theme, `site/moonknight.html` for the Moon Knight theme). Host it anywhere static.
+The site is one static file: `site/index.html`. Host it anywhere static. Point the host at the `site/` directory; `index.html` is the homepage.
 
 ### Walrus Sites (on-brand)
 
@@ -161,12 +161,25 @@ site-builder publish ./site --epochs 100
 #  it prints a Base36 object id; browse it at https://<id>.walrus.site
 ```
 
-### Vercel or Netlify
+### Vercel
+
+The file to deploy is `site/index.html`. Vercel serves a directory, so point it at `site/`.
+
+CLI:
 
 ```bash
-npx vercel deploy site --prod
-#  or drag the site/ folder into the Netlify dashboard
+npm i -g vercel
+cd site
+vercel --prod          # serves index.html at the root of the deployment
 ```
+
+Dashboard: New Project, import the `Sage-senpai/Kairos` repo, set **Root Directory** to `site`, framework preset **Other**, Deploy. Vercel serves `site/index.html` as the homepage.
+
+### Netlify
+
+Drag the `site/` folder into the Netlify dashboard, or set the publish directory to `site`.
+
+> Publishing the npm packages and the `npx create-kairos-agent` flow are covered separately in [PUBLISHING.md](PUBLISHING.md).
 
 ---
 

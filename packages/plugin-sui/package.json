@@ -1,6 +1,6 @@
 {
   "name": "@kairos/plugin-sui",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "KAIROS Sui plugin — transfer, swap, stake, read-object actions and balance/price providers.",
   "license": "MIT",
   "type": "module",
@@ -28,5 +28,15 @@
     "@kairos/core": "workspace:*",
     "@mysten/sui": "^1.45.0",
     "zod": "^4.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sage-senpai/Kairos.git",
+    "directory": "packages/plugin-sui"
+  },
+  "homepage": "https://github.com/Sage-senpai/Kairos#readme",
+  "bugs": "https://github.com/Sage-senpai/Kairos/issues",
+  "publishConfig": {
+    "access": "public"
   }
 }

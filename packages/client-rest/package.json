@@ -1,6 +1,6 @@
 {
   "name": "@kairos/client-rest",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "KAIROS REST client — an Express server exposing an agent over HTTP.",
   "license": "MIT",
   "type": "module",
@@ -31,5 +31,15 @@
   "devDependencies": {
     "@mysten/sui": "^1.45.0",
     "@types/express": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sage-senpai/Kairos.git",
+    "directory": "packages/client-rest"
+  },
+  "homepage": "https://github.com/Sage-senpai/Kairos#readme",
+  "bugs": "https://github.com/Sage-senpai/Kairos/issues",
+  "publishConfig": {
+    "access": "public"
   }
 }

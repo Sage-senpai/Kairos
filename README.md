@@ -173,6 +173,6 @@ MIT — build whatever you want.
 
 <div align="center">
 
-*Made for Sui Overflow 2026 · Agentic Web track*
+*Made for Sui Overflow 2026 · Agentic Web track by sage-senpai*
 
 </div>

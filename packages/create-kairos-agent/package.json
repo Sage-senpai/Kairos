@@ -1,6 +1,6 @@
 {
   "name": "create-kairos-agent",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Scaffold a new KAIROS agent.",
   "license": "MIT",
   "type": "module",
@@ -26,5 +26,15 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sage-senpai/Kairos.git",
+    "directory": "packages/create-kairos-agent"
+  },
+  "homepage": "https://github.com/Sage-senpai/Kairos#readme",
+  "bugs": "https://github.com/Sage-senpai/Kairos/issues",
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@kairos/client-telegram",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "KAIROS Telegram client — drive an agent from a Telegram bot.",
   "license": "MIT",
   "type": "module",
@@ -29,5 +29,15 @@
   },
   "devDependencies": {
     "@mysten/sui": "^1.45.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sage-senpai/Kairos.git",
+    "directory": "packages/client-telegram"
+  },
+  "homepage": "https://github.com/Sage-senpai/Kairos#readme",
+  "bugs": "https://github.com/Sage-senpai/Kairos/issues",
+  "publishConfig": {
+    "access": "public"
   }
 }
