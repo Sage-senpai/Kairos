@@ -23,8 +23,8 @@ Optional but recommended:
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/your-org/kairos.git
-cd kairos
+git clone https://github.com/Sage-senpai/Kairos.git
+cd Kairos
 
 # 2. Install all workspace dependencies
 pnpm install

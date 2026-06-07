@@ -45,7 +45,7 @@ export const walrusPlugin: Plugin = {
       if (memory.role !== 'system') void store.persistMemory(memory);
     });
 
-    logger.info('plugin-walrus ready — memory persists to Walrus and survives restarts');
+    logger.info('plugin-walrus ready - memory persists to Walrus and survives restarts');
   },
 };
 

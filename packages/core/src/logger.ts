@@ -1,5 +1,5 @@
 /**
- * Structured CLI logger. The single sanctioned console sink in the framework —
+ * Structured CLI logger. The single sanctioned console sink in the framework -
  * production code logs through this, never `console.log` directly.
  *
  * Prefix colours follow the KAIROS design system (see DESIGN.md):

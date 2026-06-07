@@ -37,7 +37,7 @@ export const getOwnedObjectsAction: Action = {
       })
       .filter((line): line is string => line !== null);
 
-    const suffix = owned.hasNextPage ? `\n…and more (showing first ${MAX_LISTED}).` : '';
+    const suffix = owned.hasNextPage ? `\n...and more (showing first ${MAX_LISTED}).` : '';
     callback({ text: `Owned objects (${lines.length}):\n${lines.join('\n')}${suffix}` });
   },
 };

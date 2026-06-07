@@ -42,7 +42,7 @@ export const suiPlugin: Plugin = {
     runtime.keypair = Ed25519Keypair.fromSecretKey(secretKey);
     runtime.suiAddress = runtime.keypair.getPublicKey().toSuiAddress();
 
-    logger.info(`plugin-sui ready on ${network} — ${truncateAddress(runtime.suiAddress)}`);
+    logger.info(`plugin-sui ready on ${network} - ${truncateAddress(runtime.suiAddress)}`);
   },
 };
 

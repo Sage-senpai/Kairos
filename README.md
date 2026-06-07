@@ -54,8 +54,8 @@ The name comes from the Greek word *kairos* — the opportune moment, the right 
 
 ```bash
 # 1. Clone
-git clone https://github.com/your-org/kairos
-cd kairos
+git clone https://github.com/Sage-senpai/Kairos
+cd Kairos
 
 # 2. Install
 pnpm install

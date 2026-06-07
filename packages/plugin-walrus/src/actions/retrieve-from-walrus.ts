@@ -46,7 +46,7 @@ export const retrieveFromWalrusAction: Action = {
     }
 
     callback({
-      text: `Retrieved from Walrus (blob ${parsed.data.blobId.slice(0, 8)}…):\n${content}`,
+      text: `Retrieved from Walrus (blob ${parsed.data.blobId.slice(0, 8)}):\n${content}`,
     });
   },
 };

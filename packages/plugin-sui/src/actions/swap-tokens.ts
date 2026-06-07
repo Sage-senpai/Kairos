@@ -6,7 +6,7 @@ import type { Action, SuiNetwork } from '@kairos/core';
  * DeepBook v3 on-chain package ids and the DEEP coin type, per network.
  *
  * These are the published DeepBook v3 ids at time of writing. DeepBook upgrades
- * its package periodically — verify the current id before using on mainnet.
+ * its package periodically - verify the current id before using on mainnet.
  * (We call the protocol directly via PTB rather than the deepbook-v3 SDK, which
  * requires @mysten/sui v2.x; this framework targets the v1.x SDK per CLAUDE.md.)
  */
@@ -114,7 +114,7 @@ export const swapTokensAction: Action = {
     await runtime.suiClient.waitForTransaction({ digest: result.digest });
 
     callback({
-      text: `Swapped ${amount} (${direction}) on pool ${poolId.slice(0, 8)}…. Transaction confirmed.`,
+      text: `Swapped ${amount} (${direction}) on pool ${poolId.slice(0, 8)}. Transaction confirmed.`,
       txDigest: result.digest,
     });
   },

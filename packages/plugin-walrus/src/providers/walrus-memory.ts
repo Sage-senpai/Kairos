@@ -17,7 +17,7 @@ export const walrusMemoryProvider: Provider = {
 
     const lines = recent.map((r) => {
       const when = new Date(r.timestamp).toISOString().slice(0, 10);
-      return `[${when}] ${r.summary} (blob ${r.blobId.slice(0, 8)}…)`;
+      return `[${when}] ${r.summary} (blob ${r.blobId.slice(0, 8)})`;
     });
     return `Recent memory (from Walrus):\n${lines.join('\n')}`;
   },

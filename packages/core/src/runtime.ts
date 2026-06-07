@@ -19,7 +19,7 @@ import { formatSui, generateId } from './utils';
 /**
  * The central object of a KAIROS agent. One runtime per agent process.
  *
- * The runtime knows nothing about Sui directly — `suiClient`, `keypair`, and
+ * The runtime knows nothing about Sui directly - `suiClient`, `keypair`, and
  * `suiAddress` are populated by plugin-sui during `registerPlugin`. This keeps
  * core testable without a chain connection.
  */
@@ -143,7 +143,7 @@ export class AgentRuntime implements IAgentRuntime {
     const action = resolvedName ? this.actions.get(resolvedName) : undefined;
 
     if (!action) {
-      logger.warn(`LLM requested unknown action "${name}" — skipping`);
+      logger.warn(`LLM requested unknown action "${name}" - skipping`);
       return { text: `Unknown action: ${name}`, isError: true };
     }
 
@@ -164,7 +164,7 @@ export class AgentRuntime implements IAgentRuntime {
       });
 
       if (result.txDigest) {
-        logger.success(`${action.name} confirmed — tx ${result.txDigest}`);
+        logger.success(`${action.name} confirmed: tx ${result.txDigest}`);
         return { text: `${result.text} (tx: ${result.txDigest})`, isError: false };
       }
       return { text: result.text || `${action.name} completed.`, isError: false };

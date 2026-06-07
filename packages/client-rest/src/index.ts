@@ -13,9 +13,9 @@ interface MessageBody {
  * Start an Express REST server that exposes a KAIROS agent over HTTP.
  *
  * Routes:
- *   GET  /health   — liveness probe
- *   GET  /balance  — the agent's SUI balance
- *   POST /message  — send the agent a message: { text, userId, conversationId? }
+ *   GET  /health   - liveness probe
+ *   GET  /balance  - the agent's SUI balance
+ *   POST /message  - send the agent a message: { text, userId, conversationId? }
  *
  * Returns the underlying `http.Server` so callers can close it in tests.
  */

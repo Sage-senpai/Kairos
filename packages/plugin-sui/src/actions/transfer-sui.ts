@@ -10,7 +10,7 @@ const paramsSchema = z.object({
   amount: z.number().positive().max(1_000_000, 'amount is unrealistically large'),
 });
 
-/** Minimum balance (in MIST) required before we attempt a transfer — covers gas. */
+/** Minimum balance (in MIST) required before we attempt a transfer - covers gas. */
 const MIN_GAS_BUFFER = 2_000_000n;
 
 export const transferSuiAction: Action = {

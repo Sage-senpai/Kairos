@@ -3,558 +3,584 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>KAIROS: give an LLM a Sui wallet</title>
+    <title>KAIROS: give a language model a Sui wallet</title>
     <meta
       name="description"
-      content="KAIROS is a Move-native AI agent framework for Sui. The model signs PTBs, swaps on DeepBook, and keeps its memory on Walrus."
+      content="KAIROS wires a language model to a Sui wallet. It signs PTBs, swaps on DeepBook, and keeps its memory on Walrus."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --void: #07070c;
-        --surface: #111119;
-        --border: rgba(255, 255, 255, 0.08);
-        --muted: #6b6b8a;
-        --text: #ebebf5;
-        --text-2: #a8a8c0;
-        --violet: #7c3aed;
-        --violet-2: #9f67ff;
-        --teal: #2dd4bf;
-        --teal-2: #5eead4;
-        --ease: cubic-bezier(0.32, 0.72, 0, 1);
+        /* Abyssal charcoal base, bone text, blood-crimson + arcane gold accents. */
+        --bg: oklch(0.16 0.012 40);
+        --bg-deep: oklch(0.13 0.012 40);
+        --panel: oklch(0.19 0.014 45);
+        --line: oklch(0.62 0.03 60 / 0.13);
+        --line-strong: oklch(0.66 0.05 60 / 0.26);
+        --text: oklch(0.92 0.018 85);
+        --text-2: oklch(0.73 0.022 72);
+        --muted: oklch(0.57 0.025 58);
+        --crimson: oklch(0.55 0.2 26);
+        --crimson-lit: oklch(0.66 0.21 28);
+        --gold: oklch(0.83 0.13 80);
+        --amber: oklch(0.8 0.09 75);
+        --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        --maxw: 1120px;
       }
 
       * {
         box-sizing: border-box;
       }
-
       html {
         scroll-behavior: smooth;
       }
-
       body {
         margin: 0;
-        background: var(--void);
+        background: var(--bg);
         color: var(--text);
         font:
-          400 16px/1.7 Inter,
+          400 16px/1.65 Inter,
           system-ui,
           sans-serif;
         -webkit-font-smoothing: antialiased;
         overflow-x: hidden;
       }
 
-      /* Background mesh: two slow-glowing orbs, fixed behind everything. */
-      .mesh {
+      /* Slow-turning ward sigil, far behind the content. */
+      .sigil {
         position: fixed;
-        inset: 0;
-        z-index: -2;
+        right: -12vmax;
+        top: 4vmax;
+        width: 54vmax;
+        height: 54vmax;
+        color: var(--gold);
+        opacity: 0.07;
         pointer-events: none;
+        z-index: -2;
+        animation: turn 200s linear infinite;
       }
-      .mesh::before,
-      .mesh::after {
-        content: '';
-        position: absolute;
-        width: 60vmax;
-        height: 60vmax;
-        border-radius: 50%;
-        filter: blur(120px);
-        opacity: 0.22;
-      }
-      .mesh::before {
-        top: -20vmax;
-        left: -10vmax;
-        background: var(--violet);
-        animation: drift 24s var(--ease) infinite alternate;
-      }
-      .mesh::after {
-        bottom: -25vmax;
-        right: -15vmax;
-        background: var(--teal);
-        animation: drift 30s var(--ease) infinite alternate-reverse;
-      }
-      @keyframes drift {
+      @keyframes turn {
         to {
-          transform: translate3d(8vmax, 6vmax, 0) scale(1.15);
+          transform: rotate(360deg);
         }
       }
 
-      /* Fixed film grain. pointer-events none, never on a scroller. */
-      .grain {
+      /* Vignette: the dark closes in at the edges. */
+      .vignette {
         position: fixed;
         inset: 0;
-        z-index: 60;
         pointer-events: none;
-        opacity: 0.04;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        z-index: -1;
+        background: radial-gradient(
+          ellipse 110% 85% at 50% 8%,
+          transparent 42%,
+          oklch(0.1 0.01 40 / 0.72) 100%
+        );
       }
 
       .wrap {
-        max-width: 1080px;
+        max-width: var(--maxw);
         margin: 0 auto;
-        padding: 0 24px;
+        padding: 0 28px;
       }
 
-      /* Floating glass pill nav, detached from the top. */
-      .nav {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 40;
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        background: oklch(0.16 0.012 40 / 0.84);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+      }
+      .bar {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 16px 28px;
         display: flex;
         align-items: center;
-        gap: 28px;
-        padding: 10px 12px 10px 22px;
-        border-radius: 999px;
-        border: 1px solid var(--border);
-        background: rgba(17, 17, 25, 0.55);
-        backdrop-filter: blur(20px);
-        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.06);
+        justify-content: space-between;
       }
-      .brand {
+      .mark {
         font:
-          700 19px/1 'Space Grotesk',
+          700 18px/1 'Space Grotesk',
           sans-serif;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.16em;
         color: var(--text);
+        text-decoration: none;
       }
-      .brand b {
-        color: var(--violet-2);
-        font-size: 1.12em;
+      .mark span {
+        color: var(--gold);
+        text-shadow: 0 0 16px oklch(0.83 0.13 80 / 0.45);
       }
-      .nav-links {
+      .bar nav {
         display: flex;
-        gap: 22px;
+        align-items: center;
+        gap: 26px;
       }
-      .nav-links a {
+      .bar nav a {
         color: var(--text-2);
         text-decoration: none;
-        font-size: 13px;
+        font-size: 14px;
+        transition: color 0.25s var(--ease);
       }
-      .nav-links a:hover {
+      .bar nav a:hover {
         color: var(--text);
       }
-      .nav-cta {
-        padding: 8px 16px;
-        border-radius: 999px;
-        background: var(--text);
-        color: var(--void);
-        font:
-          500 13px/1 Inter,
-          sans-serif;
-        text-decoration: none;
-        transition: transform 0.4s var(--ease);
+      .bar .repo {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12.5px;
+        color: var(--text);
+        border: 1px solid var(--line-strong);
+        padding: 7px 12px;
+        border-radius: 7px;
       }
-      .nav-cta:active {
-        transform: scale(0.96);
-      }
-      .burger {
-        display: none;
-      }
-
-      section {
-        padding: 120px 0;
-      }
-
-      /* Eyebrow tag. */
-      .eyebrow {
-        display: inline-block;
-        padding: 5px 13px;
-        border-radius: 999px;
-        border: 1px solid var(--border);
-        background: rgba(124, 58, 237, 0.1);
-        color: var(--violet-2);
-        font:
-          500 10px/1 Inter,
-          sans-serif;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        margin-bottom: 28px;
+      .bar .repo:hover {
+        border-color: var(--gold);
+        color: var(--gold);
       }
 
       .hero {
-        min-height: 100dvh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding-top: 120px;
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 56px;
+        align-items: center;
+        padding: 96px 0 80px;
       }
-      .hero h1 {
+      .kicker {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12.5px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 22px;
+      }
+      .kicker::before {
+        content: '';
+        display: inline-block;
+        width: 22px;
+        height: 1px;
+        background: var(--gold);
+        vertical-align: middle;
+        margin-right: 10px;
+      }
+      h1 {
         font:
-          700 clamp(44px, 7vw, 82px) / 1.04 'Space Grotesk',
+          600 clamp(38px, 4.6vw, 60px) / 1.06 'Space Grotesk',
           sans-serif;
-        margin: 0 0 24px;
         letter-spacing: -0.02em;
-        max-width: 14ch;
+        margin: 0 0 22px;
       }
-      .hero h1 .grad {
-        background: linear-gradient(100deg, var(--violet-2) 10%, var(--teal-2) 90%);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
+      h1 em {
+        font-style: normal;
+        color: var(--crimson-lit);
       }
-      .hero p {
-        font-size: 19px;
+      .lede {
+        font-size: 18px;
+        line-height: 1.6;
         color: var(--text-2);
-        max-width: 54ch;
-        margin: 0;
+        max-width: 50ch;
+        margin: 0 0 32px;
       }
-      .actions {
+      .cta-row {
         display: flex;
         flex-wrap: wrap;
         gap: 12px;
-        margin-top: 36px;
       }
-
-      /* Button-in-button primary CTA. */
       .btn {
         display: inline-flex;
         align-items: center;
-        gap: 10px;
-        padding: 8px 8px 8px 22px;
-        border-radius: 999px;
+        gap: 9px;
         font:
           500 15px/1 Inter,
           sans-serif;
         text-decoration: none;
-        transition: transform 0.4s var(--ease);
+        padding: 13px 20px;
+        border-radius: 9px;
+        transition:
+          transform 0.2s var(--ease),
+          background 0.25s var(--ease),
+          border-color 0.25s var(--ease);
       }
       .btn:active {
-        transform: scale(0.97);
+        transform: translateY(1px);
       }
-      .btn-primary {
-        background: var(--violet);
-        color: #fff;
+      .btn-solid {
+        background: var(--crimson);
+        color: oklch(0.96 0.01 85);
       }
-      .btn-primary .pip {
-        display: grid;
-        place-items: center;
-        width: 30px;
-        height: 30px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.16);
-        transition: transform 0.5s var(--ease);
+      .btn-solid:hover {
+        background: var(--crimson-lit);
       }
-      .btn-primary:hover .pip {
-        transform: translate(3px, -1px) scale(1.06);
-      }
-      .btn-ghost {
-        padding: 8px 22px;
-        border: 1px solid var(--border);
+      .btn-line {
+        border: 1px solid var(--line-strong);
         color: var(--text);
       }
-      .btn-ghost:hover {
-        border-color: var(--muted);
+      .btn-line:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+      .btn .arr {
+        font-family: 'JetBrains Mono', monospace;
+        transition: transform 0.3s var(--ease);
+      }
+      .btn-solid:hover .arr {
+        transform: translateX(3px);
       }
 
-      .section-head {
-        max-width: 46ch;
-        margin-bottom: 48px;
-      }
-      .section-head h2 {
-        font:
-          500 clamp(28px, 4vw, 40px) / 1.15 'Space Grotesk',
-          sans-serif;
-        letter-spacing: -0.01em;
-        margin: 0 0 12px;
-      }
-      .section-head p {
-        color: var(--text-2);
-        margin: 0;
-      }
-
-      /* Asymmetric bento of double-bezel cards. */
-      .bento {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 16px;
-      }
-      .shell {
-        padding: 6px;
-        border-radius: 26px;
-        border: 1px solid var(--border);
-        background: rgba(255, 255, 255, 0.025);
-        transition:
-          transform 0.6s var(--ease),
-          border-color 0.6s var(--ease);
-      }
-      .shell:hover {
-        transform: translateY(-4px);
-        border-color: rgba(255, 255, 255, 0.16);
-      }
-      .core {
-        height: 100%;
-        padding: 26px 28px;
-        border-radius: 20px;
-        background: var(--surface);
-        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.06);
-      }
-      .span-3 {
-        grid-column: span 3;
-      }
-      .span-2 {
-        grid-column: span 2;
-      }
-      .card-k {
-        font:
-          500 13px/1 'JetBrains Mono',
-          monospace;
-        color: var(--teal-2);
-        letter-spacing: 0.04em;
-      }
-      .core h3 {
-        font:
-          500 20px/1.3 'Space Grotesk',
-          sans-serif;
-        margin: 16px 0 8px;
-      }
-      .core p {
-        margin: 0;
-        font-size: 14.5px;
-        color: var(--text-2);
-      }
-
-      /* Terminal block, double-bezel. */
-      .term-shell {
-        padding: 8px;
-        border-radius: 22px;
-        border: 1px solid var(--border);
-        background: rgba(255, 255, 255, 0.025);
-      }
-      .term {
-        border-radius: 15px;
-        background: #050509;
-        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+      .terminal {
+        border: 1px solid var(--line-strong);
+        border-radius: 12px;
+        background: var(--bg-deep);
         overflow: hidden;
+        box-shadow: 0 26px 70px -34px oklch(0.05 0.04 30 / 0.9);
       }
       .term-bar {
         display: flex;
-        gap: 7px;
-        padding: 14px 18px;
-        border-bottom: 1px solid var(--border);
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
       }
-      .dot {
-        width: 11px;
-        height: 11px;
-        border-radius: 999px;
-        background: #2a2a3a;
+      .term-bar i {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--line-strong);
       }
-      .term pre {
-        margin: 0;
-        padding: 22px 24px;
+      .term-bar i:first-child {
+        background: oklch(0.55 0.18 28 / 0.7);
+      }
+      .term-bar b {
+        margin-left: 8px;
         font:
-          400 13.5px/1.7 'JetBrains Mono',
+          400 12px/1 'JetBrains Mono',
+          monospace;
+        color: var(--muted);
+      }
+      .terminal pre {
+        margin: 0;
+        padding: 20px 20px 24px;
+        font:
+          400 13px/1.75 'JetBrains Mono',
           monospace;
         color: var(--text);
         overflow-x: auto;
       }
-      .c {
+      .prompt {
         color: var(--muted);
       }
-      .v {
-        color: var(--violet-2);
+      .action {
+        color: var(--crimson-lit);
       }
-      .t {
-        color: var(--teal-2);
+      .ok {
+        color: var(--gold);
       }
-      .s {
-        color: #86efac;
+      .str {
+        color: var(--amber);
+      }
+      .key {
+        color: var(--gold);
+      }
+      .cursor {
+        display: inline-block;
+        width: 8px;
+        height: 15px;
+        background: var(--gold);
+        vertical-align: text-bottom;
+        animation: blink 1.1s steps(1) infinite;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+
+      .section {
+        padding: 88px 0;
+        border-top: 1px solid var(--line);
+      }
+      .section-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 40px;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 64px 1fr 1.4fr;
+        gap: 28px;
+        padding: 28px 0;
+        border-top: 1px solid var(--line);
+        align-items: baseline;
+      }
+      .row:last-child {
+        border-bottom: 1px solid var(--line);
+      }
+      .row .num {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        color: var(--gold);
+      }
+      .row h3 {
+        font:
+          600 21px/1.25 'Space Grotesk',
+          sans-serif;
+        margin: 0;
+        letter-spacing: -0.01em;
+      }
+      .row p {
+        margin: 0;
+        color: var(--text-2);
+        font-size: 15.5px;
+        line-height: 1.6;
+      }
+
+      .start h2 {
+        font:
+          600 clamp(28px, 3.4vw, 38px) / 1.1 'Space Grotesk',
+          sans-serif;
+        letter-spacing: -0.02em;
+        margin: 0 0 12px;
+      }
+      .start .lede {
+        margin-bottom: 32px;
+      }
+      .code {
+        border: 1px solid var(--line-strong);
+        border-radius: 12px;
+        background: var(--bg-deep);
+        padding: 22px 24px;
+        font:
+          400 13.5px/2 'JetBrains Mono',
+          monospace;
+        color: var(--text);
+        overflow-x: auto;
+      }
+      .code .c {
+        color: var(--muted);
+      }
+      .code .cmd {
+        color: var(--gold);
+      }
+      .start .more {
+        margin-top: 20px;
+        color: var(--text-2);
+        font-size: 15px;
+      }
+      .start .more a {
+        color: var(--gold);
+        text-decoration: none;
+        border-bottom: 1px solid var(--line-strong);
+      }
+      .start .more a:hover {
+        border-color: var(--gold);
       }
 
       footer {
-        padding: 40px 0 64px;
-        border-top: 1px solid var(--border);
-        color: var(--muted);
-        font-size: 13px;
+        border-top: 1px solid var(--line);
+        padding: 36px 0 56px;
         display: flex;
         justify-content: space-between;
+        align-items: center;
         flex-wrap: wrap;
-        gap: 12px;
+        gap: 14px;
+        color: var(--muted);
+        font-size: 13.5px;
+      }
+      footer a {
+        color: var(--text-2);
+        text-decoration: none;
+      }
+      footer a:hover {
+        color: var(--gold);
       }
 
-      /* Scroll-reveal: heavy fade-up with blur. */
       .reveal {
         opacity: 0;
-        transform: translateY(28px);
-        filter: blur(8px);
+        transform: translateY(20px);
         transition:
-          opacity 0.9s var(--ease),
-          transform 0.9s var(--ease),
-          filter 0.9s var(--ease);
+          opacity 0.7s var(--ease),
+          transform 0.7s var(--ease);
       }
       .reveal.in {
         opacity: 1;
         transform: none;
-        filter: none;
-      }
-      .reveal.d1 {
-        transition-delay: 0.08s;
-      }
-      .reveal.d2 {
-        transition-delay: 0.16s;
-      }
-      .reveal.d3 {
-        transition-delay: 0.24s;
       }
 
-      @media (max-width: 760px) {
-        section {
-          padding: 80px 0;
+      @media (max-width: 860px) {
+        .hero {
+          grid-template-columns: 1fr;
+          gap: 40px;
+          padding: 64px 0 56px;
         }
-        .nav-links {
+        .row {
+          grid-template-columns: 40px 1fr;
+        }
+        .row p {
+          grid-column: 1 / -1;
+        }
+        .bar nav a:not(.repo) {
           display: none;
         }
-        .bento {
-          grid-template-columns: 1fr;
-        }
-        .span-3,
-        .span-2 {
-          grid-column: span 1;
+        .sigil {
+          opacity: 0.045;
         }
       }
       @media (prefers-reduced-motion: reduce) {
         .reveal {
           opacity: 1;
           transform: none;
-          filter: none;
         }
-        .mesh::before,
-        .mesh::after {
+        .cursor,
+        .sigil {
           animation: none;
         }
       }
     </style>
   </head>
   <body>
-    <div class="mesh"></div>
-    <div class="grain"></div>
+    <svg class="sigil" viewBox="0 0 400 400" aria-hidden="true">
+      <g fill="none" stroke="currentColor" stroke-width="1">
+        <circle cx="200" cy="200" r="197" />
+        <circle cx="200" cy="200" r="168" />
+        <circle cx="200" cy="200" r="178" stroke-dasharray="1.5 13" />
+        <circle cx="200" cy="200" r="120" />
+        <circle cx="200" cy="200" r="66" />
+        <polygon points="200,42 334,278 66,278" />
+        <polygon points="200,358 66,122 334,122" />
+      </g>
+    </svg>
+    <div class="vignette"></div>
 
-    <nav class="nav">
-      <span class="brand"><b>K</b>AIROS</span>
-      <span class="nav-links">
-        <a href="#why">Why</a>
-        <a href="#start">Start</a>
-        <a href="https://github.com/your-org/kairos">GitHub</a>
-      </span>
-      <a class="nav-cta" href="https://github.com/your-org/kairos">Star on GitHub</a>
-    </nav>
+    <header>
+      <div class="bar">
+        <a class="mark" href="#top">KAIR<span>O</span>S</a>
+        <nav>
+          <a href="#features">How it works</a>
+          <a href="#start">Quickstart</a>
+          <a href="https://github.com/Sage-senpai/Kairos/tree/main/docs">Docs</a>
+          <a class="repo" href="https://github.com/Sage-senpai/Kairos">Sage-senpai/Kairos</a>
+        </nav>
+      </div>
+    </header>
 
-    <div class="wrap">
-      <header class="hero">
-        <span class="eyebrow reveal in">Sui Overflow 2026 · Agentic Web</span>
-        <h1 class="reveal in d1">Give an LLM a <span class="grad">Sui wallet</span>.</h1>
-        <p class="reveal in d2">
-          KAIROS hands a language model a wallet, a name, and a set of actions. It signs PTBs, swaps
-          on DeepBook, keeps its memory on Walrus, and reads any object on chain. You ask in plain
-          language. It does the work and shows you the digest.
-        </p>
-        <div class="actions reveal in d3">
-          <a class="btn btn-primary" href="#start"> Build an agent <span class="pip">↗</span> </a>
-          <a class="btn btn-ghost" href="#why">See how it works</a>
+    <main class="wrap" id="top">
+      <section class="hero">
+        <div>
+          <p class="kicker">Move-native agent framework</p>
+          <h1>An AI agent that <em>moves real money</em> on Sui.</h1>
+          <p class="lede">
+            KAIROS wires a language model to a Sui wallet. Type a sentence and it builds the
+            programmable transaction, signs it, sends it, and hands back the digest. Swaps on
+            DeepBook, memory on Walrus, any object on chain.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-solid" href="#start">Start building <span class="arr">-&gt;</span></a>
+            <a class="btn btn-line" href="https://github.com/Sage-senpai/Kairos">View source</a>
+          </div>
         </div>
-      </header>
 
-      <section id="why">
-        <div class="section-head reveal">
-          <h2>Other chains have Eliza, AgentKit, a dozen frameworks. Sui had none.</h2>
-          <p>So we built the one that speaks Move natively. Four things make it different.</p>
+        <div class="terminal" aria-hidden="true">
+          <div class="term-bar"><i></i><i></i><i></i><b>atlas · agent</b></div>
+          <pre><span class="prompt">$</span> curl -s localhost:3000/message \
+  -d <span class="str">'{"text":"send 0.1 SUI to alice","userId":"me"}'</span>
+
+<span class="action">[ACTION]</span> TRANSFER_SUI executing...
+<span class="ok">[✓]</span> confirmed: tx 8x4Fd2qP9rLks7
+
+{
+  <span class="key">"text"</span>: <span class="str">"Sent 0.1 SUI to 0xa1b2...c3d4. Confirmed."</span>
+}
+<span class="prompt">$</span> <span class="cursor"></span></pre>
         </div>
+      </section>
 
-        <div class="bento">
-          <div class="shell span-3 reveal">
-            <div class="core">
-              <span class="card-k">PTB_NATIVE</span>
-              <h3>Multi-step, or nothing</h3>
-              <p>
-                Transfer, swap, stake, read objects. A swap-then-transfer is one transaction. It
-                lands whole or it doesn't land. No half-finished state to clean up, which is the
-                part EVM agents never quite solved.
-              </p>
-            </div>
+      <section class="section" id="features">
+        <p class="section-label">// what you actually get</p>
+
+        <div class="reveal">
+          <div class="row">
+            <span class="num">01</span>
+            <h3>One transaction, or none</h3>
+            <p>
+              Transfer, swap, stake, read. A swap and the transfer that follows it ride in a single
+              programmable transaction. It all lands or nothing does, so there is no half-finished
+              state to babysit.
+            </p>
           </div>
-          <div class="shell span-3 reveal d1">
-            <div class="core">
-              <span class="card-k">WALRUS_MEMORY</span>
-              <h3>Memory it actually owns</h3>
-              <p>
-                The agent's memory sits on Walrus, not in some database you rent. Kill the process,
-                boot it back up tomorrow, and it still knows what it did. The user owns the blobs.
-                Nobody can quietly delete them.
-              </p>
-            </div>
+          <div class="row">
+            <span class="num">02</span>
+            <h3>Memory it keeps on Walrus</h3>
+            <p>
+              The agent stores what it does on Walrus, not in a database you rent. Kill the process,
+              boot it back next week, and it still remembers. The user owns those blobs.
+            </p>
           </div>
-          <div class="shell span-2 reveal">
-            <div class="core">
-              <span class="card-k">20_LINES</span>
-              <h3>Actions are tiny</h3>
-              <p>
-                Write a TypeScript object. The model reads the description and decides when to call
-                it. No router. No parser. No state machine you have to babysit.
-              </p>
-            </div>
+          <div class="row">
+            <span class="num">03</span>
+            <h3>Actions in about 20 lines</h3>
+            <p>
+              An action is a TypeScript object with a plain-English description. The model reads it
+              and decides when to call. You write no router, no parser, no state machine.
+            </p>
           </div>
-          <div class="shell span-2 reveal d1">
-            <div class="core">
-              <span class="card-k">MULTI_AGENT</span>
-              <h3>Agents that coordinate</h3>
-              <p>
-                One agent writes to Walrus. Another reads it back as context. They talk through the
-                chain, never through each other's APIs, so there's no shared secret to leak.
-              </p>
-            </div>
+          <div class="row">
+            <span class="num">04</span>
+            <h3>Agents that coordinate</h3>
+            <p>
+              One agent writes a summary to Walrus, another reads it back as context. They sync
+              through the chain instead of calling each other, so nothing leaks between them.
+            </p>
           </div>
-          <div class="shell span-2 reveal d2">
-            <div class="core">
-              <span class="card-k">CLAUDE</span>
-              <h3>Real tool use</h3>
-              <p>
-                Every action becomes a Claude tool. The model picks what to call, you execute it,
-                the result feeds back. That loop is the whole framework.
-              </p>
-            </div>
+          <div class="row">
+            <span class="num">05</span>
+            <h3>Built on Claude tool use</h3>
+            <p>
+              Every action becomes a tool the model can call. It picks, you execute, the result
+              feeds back into the conversation. That loop is the whole framework.
+            </p>
           </div>
         </div>
       </section>
 
-      <section id="start">
-        <div class="section-head reveal">
-          <h2>Running in three commands</h2>
-          <p>Scaffold it, drop in your keys, talk to it over HTTP.</p>
-        </div>
-        <div class="term-shell reveal d1">
-          <div class="term">
-            <div class="term-bar">
-              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-            </div>
-            <pre><span class="c"># scaffold a new agent</span>
-npx create-kairos-agent Atlas
-
-<span class="c"># add your keys, then boot it</span>
-cd agents/atlas && cp .env.example .env
-pnpm install && pnpm start
-
-<span class="c"># ask it something</span>
-curl -X POST localhost:3000/message \
-  -H <span class="t">"Content-Type: application/json"</span> \
-  -d <span class="s">'{"text": "what is my SUI balance?", "userId": "alice"}'</span></pre>
+      <section class="section start" id="start">
+        <div class="reveal">
+          <h2>Three commands to a live agent</h2>
+          <p class="lede">Scaffold it, drop in two keys, boot it. Then talk to it over HTTP.</p>
+          <div class="code">
+            <span class="c"># scaffold a new agent</span>
+            <br /><span class="cmd">npx</span> create-kairos-agent Atlas <br /><br />
+            <span class="c"># add SUI_PRIVATE_KEY and ANTHROPIC_API_KEY, then boot</span>
+            <br /><span class="cmd">cd</span> agents/atlas &amp;&amp; cp .env.example .env
+            <br /><span class="cmd">pnpm</span> install &amp;&amp;
+            <span class="cmd">pnpm</span> start
           </div>
+          <p class="more">
+            Prefer a chat bot? Wire the same runtime to
+            <a href="https://github.com/Sage-senpai/Kairos/tree/main/packages/client-telegram"
+              >Telegram</a
+            >, or read the
+            <a href="https://github.com/Sage-senpai/Kairos/blob/main/docs/BUILDING_AGENTS.md"
+              >build guide</a
+            >.
+          </p>
         </div>
       </section>
+    </main>
 
-      <footer>
-        <span>MIT licensed. Fork it, ship it.</span>
-        <span>Built for Sui Overflow 2026</span>
-      </footer>
-    </div>
+    <footer class="wrap">
+      <span>MIT licensed. Fork it, ship it.</span>
+      <a href="https://github.com/Sage-senpai/Kairos">github.com/Sage-senpai/Kairos</a>
+    </footer>
 
     <script>
-      // Scroll reveals via IntersectionObserver (no scroll listeners).
       const io = new IntersectionObserver(
         (entries) => {
           for (const e of entries) {
@@ -564,9 +590,9 @@ curl -X POST localhost:3000/message \
             }
           }
         },
-        { threshold: 0.15 },
+        { threshold: 0.12 },
       );
-      document.querySelectorAll('.reveal:not(.in)').forEach((el) => io.observe(el));
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
     </script>
   </body>
 </html>

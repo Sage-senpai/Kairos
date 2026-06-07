@@ -13,7 +13,7 @@ const paramsSchema = z.object({
     .regex(/^0x[0-9a-fA-F]{1,64}$/, 'validatorAddress must be a 0x-prefixed address'),
 });
 
-/** Minimum balance (in MIST) required to stake — 1 SUI. */
+/** Minimum balance (in MIST) required to stake - 1 SUI. */
 const MIN_STAKE_MIST = 1_000_000_000n;
 
 export const stakeSuiAction: Action = {

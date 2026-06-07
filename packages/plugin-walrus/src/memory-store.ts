@@ -19,7 +19,7 @@ interface WalrusStoreResponse {
 export interface WalrusMemoryStoreOptions {
   /**
    * Path to a JSON file used as a persistent index of stored blob ids. When
-   * set, the index survives process restarts — the agent can recall what it
+   * set, the index survives process restarts - the agent can recall what it
    * stored in prior sessions. Defaults to in-memory only when omitted.
    */
   indexPath?: string;
@@ -33,10 +33,10 @@ const MAX_RECENT = 50;
 /**
  * Stores and retrieves blobs on Walrus over its HTTP API, and keeps an index of
  * recently stored blobs for the memory provider to surface. When an `indexPath`
- * is given, the index is persisted to disk so it survives restarts — this is
+ * is given, the index is persisted to disk so it survives restarts - this is
  * what lets an agent recall memories from previous sessions. (For trust-
  * minimised, multi-host coordination, record blob ids in the on-chain Move
- * index under `move/` instead — see docs/MULTI_AGENT.md.)
+ * index under `move/` instead - see docs/MULTI_AGENT.md.)
  */
 export class WalrusMemoryStore {
   private readonly publisherUrl: string;
@@ -65,7 +65,7 @@ export class WalrusMemoryStore {
         logger.info(`Loaded ${this.records.length} memory record(s) from Walrus index`);
       }
     } catch {
-      // No index yet (first run) — start empty.
+      // No index yet (first run) - start empty.
     }
   }
 
@@ -96,7 +96,7 @@ export class WalrusMemoryStore {
     return record;
   }
 
-  /** Persist a Memory as a Walrus blob. Fire-and-forget safe — never throws. */
+  /** Persist a Memory as a Walrus blob. Fire-and-forget safe - never throws. */
   async persistMemory(memory: Memory): Promise<void> {
     try {
       await this.store(

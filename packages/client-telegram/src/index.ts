@@ -59,7 +59,7 @@ export async function processUpdate(
     await sendMessage(token, chatId, reply);
   } catch (err) {
     logger.error('Telegram message handling failed', err);
-    await sendMessage(token, chatId, 'Sorry — something went wrong handling that.');
+    await sendMessage(token, chatId, 'Sorry - something went wrong handling that.');
   }
 }
 

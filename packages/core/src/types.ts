@@ -1,5 +1,5 @@
 /**
- * Shared KAIROS types. Every cross-package type lives here — no type is defined
+ * Shared KAIROS types. Every cross-package type lives here - no type is defined
  * in a plugin. If a plugin needs a new type, propose it for core first.
  *
  * `@kairos/core` carries no blockchain logic; the only blockchain references here
@@ -124,7 +124,7 @@ export type ActionExecutor = (
 export interface IMemoryManager {
   add(memory: Memory): Promise<void>;
   getRecent(conversationId: string, limit?: number): Promise<Memory[]>;
-  /** Register a hook fired after every `add` — used by plugin-walrus for cold storage. */
+  /** Register a hook fired after every `add` - used by plugin-walrus for cold storage. */
   onAdd(hook: (memory: Memory) => void | Promise<void>): void;
 }
 

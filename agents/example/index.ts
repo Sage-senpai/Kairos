@@ -26,7 +26,7 @@ async function main(): Promise<void> {
   const character = loadCharacter();
   const runtime = new AgentRuntime(character);
 
-  // Order matters — register plugin-sui before plugin-walrus.
+  // Order matters - register plugin-sui before plugin-walrus.
   runtime.registerPlugin(suiPlugin);
   runtime.registerPlugin(walrusPlugin);
 
