@@ -3,22 +3,22 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>KAIROS — The AI agent framework built for Sui</title>
+    <title>KAIROS: give an LLM a Sui wallet</title>
     <meta
       name="description"
-      content="KAIROS is a Move-native AI agent framework for Sui. Agents that act, transactions that compose, memory that persists."
+      content="KAIROS is a Move-native AI agent framework for Sui. The model signs PTBs, swaps on DeepBook, and keeps its memory on Walrus."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --void: #09090f;
+        --void: #07070c;
         --surface: #111119;
-        --border: #252535;
+        --border: rgba(255, 255, 255, 0.08);
         --muted: #6b6b8a;
         --text: #ebebf5;
         --text-2: #a8a8c0;
@@ -26,10 +26,17 @@
         --violet-2: #9f67ff;
         --teal: #2dd4bf;
         --teal-2: #5eead4;
+        --ease: cubic-bezier(0.32, 0.72, 0, 1);
       }
+
       * {
         box-sizing: border-box;
       }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
       body {
         margin: 0;
         background: var(--void);
@@ -39,210 +46,527 @@
           system-ui,
           sans-serif;
         -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
       }
+
+      /* Background mesh: two slow-glowing orbs, fixed behind everything. */
+      .mesh {
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        pointer-events: none;
+      }
+      .mesh::before,
+      .mesh::after {
+        content: '';
+        position: absolute;
+        width: 60vmax;
+        height: 60vmax;
+        border-radius: 50%;
+        filter: blur(120px);
+        opacity: 0.22;
+      }
+      .mesh::before {
+        top: -20vmax;
+        left: -10vmax;
+        background: var(--violet);
+        animation: drift 24s var(--ease) infinite alternate;
+      }
+      .mesh::after {
+        bottom: -25vmax;
+        right: -15vmax;
+        background: var(--teal);
+        animation: drift 30s var(--ease) infinite alternate-reverse;
+      }
+      @keyframes drift {
+        to {
+          transform: translate3d(8vmax, 6vmax, 0) scale(1.15);
+        }
+      }
+
+      /* Fixed film grain. pointer-events none, never on a scroller. */
+      .grain {
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        pointer-events: none;
+        opacity: 0.04;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+
       .wrap {
-        max-width: 960px;
+        max-width: 1080px;
         margin: 0 auto;
         padding: 0 24px;
       }
-      header {
+
+      /* Floating glass pill nav, detached from the top. */
+      .nav {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 40;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        padding: 28px 0;
+        gap: 28px;
+        padding: 10px 12px 10px 22px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: rgba(17, 17, 25, 0.55);
+        backdrop-filter: blur(20px);
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.06);
       }
-      .wordmark {
+      .brand {
         font:
-          700 22px/1 'Space Grotesk',
+          700 19px/1 'Space Grotesk',
           sans-serif;
         letter-spacing: 0.08em;
         color: var(--text);
       }
-      .wordmark b {
-        color: var(--violet);
-        font-size: 1.1em;
+      .brand b {
+        color: var(--violet-2);
+        font-size: 1.12em;
       }
-      nav a {
+      .nav-links {
+        display: flex;
+        gap: 22px;
+      }
+      .nav-links a {
         color: var(--text-2);
         text-decoration: none;
-        margin-left: 24px;
-        font-size: 14px;
+        font-size: 13px;
       }
-      nav a:hover {
+      .nav-links a:hover {
         color: var(--text);
       }
+      .nav-cta {
+        padding: 8px 16px;
+        border-radius: 999px;
+        background: var(--text);
+        color: var(--void);
+        font:
+          500 13px/1 Inter,
+          sans-serif;
+        text-decoration: none;
+        transition: transform 0.4s var(--ease);
+      }
+      .nav-cta:active {
+        transform: scale(0.96);
+      }
+      .burger {
+        display: none;
+      }
+
+      section {
+        padding: 120px 0;
+      }
+
+      /* Eyebrow tag. */
+      .eyebrow {
+        display: inline-block;
+        padding: 5px 13px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: rgba(124, 58, 237, 0.1);
+        color: var(--violet-2);
+        font:
+          500 10px/1 Inter,
+          sans-serif;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        margin-bottom: 28px;
+      }
+
       .hero {
-        padding: 80px 0 64px;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-top: 120px;
       }
       .hero h1 {
         font:
-          700 56px/1.1 'Space Grotesk',
+          700 clamp(44px, 7vw, 82px) / 1.04 'Space Grotesk',
           sans-serif;
-        margin: 0 0 16px;
-        background: linear-gradient(90deg, var(--violet-2) 0%, var(--teal-2) 100%);
+        margin: 0 0 24px;
+        letter-spacing: -0.02em;
+        max-width: 14ch;
+      }
+      .hero h1 .grad {
+        background: linear-gradient(100deg, var(--violet-2) 10%, var(--teal-2) 90%);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
-        max-width: 12ch;
       }
       .hero p {
-        font-size: 18px;
+        font-size: 19px;
         color: var(--text-2);
-        max-width: 56ch;
+        max-width: 54ch;
+        margin: 0;
       }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 36px;
+      }
+
+      /* Button-in-button primary CTA. */
       .btn {
-        display: inline-block;
-        margin-top: 28px;
-        margin-right: 12px;
-        padding: 11px 22px;
-        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 8px 8px 22px;
+        border-radius: 999px;
         font:
-          500 14px/1 Inter,
+          500 15px/1 Inter,
           sans-serif;
         text-decoration: none;
-        transition:
-          background 0.15s,
-          border-color 0.15s;
+        transition: transform 0.4s var(--ease);
+      }
+      .btn:active {
+        transform: scale(0.97);
       }
       .btn-primary {
         background: var(--violet);
-        color: var(--text);
+        color: #fff;
       }
-      .btn-primary:hover {
-        background: var(--violet-2);
-      }
-      .btn-secondary {
-        border: 0.5px solid var(--border);
-        color: var(--text);
-      }
-      .btn-secondary:hover {
-        border-color: var(--muted);
-      }
-      .grid {
+      .btn-primary .pip {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 16px;
-        padding: 24px 0 48px;
+        place-items: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.16);
+        transition: transform 0.5s var(--ease);
       }
-      .card {
-        background: var(--surface);
-        border: 0.5px solid var(--border);
-        border-radius: 12px;
-        padding: 20px 24px;
+      .btn-primary:hover .pip {
+        transform: translate(3px, -1px) scale(1.06);
       }
-      .card:hover {
+      .btn-ghost {
+        padding: 8px 22px;
+        border: 1px solid var(--border);
+        color: var(--text);
+      }
+      .btn-ghost:hover {
         border-color: var(--muted);
       }
-      .card h3 {
-        font:
-          500 18px/1.4 Inter,
-          sans-serif;
-        margin: 0 0 8px;
-        color: var(--teal-2);
+
+      .section-head {
+        max-width: 46ch;
+        margin-bottom: 48px;
       }
-      .card p {
+      .section-head h2 {
+        font:
+          500 clamp(28px, 4vw, 40px) / 1.15 'Space Grotesk',
+          sans-serif;
+        letter-spacing: -0.01em;
+        margin: 0 0 12px;
+      }
+      .section-head p {
+        color: var(--text-2);
         margin: 0;
-        font-size: 14px;
+      }
+
+      /* Asymmetric bento of double-bezel cards. */
+      .bento {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 16px;
+      }
+      .shell {
+        padding: 6px;
+        border-radius: 26px;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.025);
+        transition:
+          transform 0.6s var(--ease),
+          border-color 0.6s var(--ease);
+      }
+      .shell:hover {
+        transform: translateY(-4px);
+        border-color: rgba(255, 255, 255, 0.16);
+      }
+      .core {
+        height: 100%;
+        padding: 26px 28px;
+        border-radius: 20px;
+        background: var(--surface);
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.06);
+      }
+      .span-3 {
+        grid-column: span 3;
+      }
+      .span-2 {
+        grid-column: span 2;
+      }
+      .card-k {
+        font:
+          500 13px/1 'JetBrains Mono',
+          monospace;
+        color: var(--teal-2);
+        letter-spacing: 0.04em;
+      }
+      .core h3 {
+        font:
+          500 20px/1.3 'Space Grotesk',
+          sans-serif;
+        margin: 16px 0 8px;
+      }
+      .core p {
+        margin: 0;
+        font-size: 14.5px;
         color: var(--text-2);
       }
-      .code-block {
-        background: #0d0d17;
-        border: 0.5px solid var(--border);
-        border-radius: 8px;
-        padding: 18px 22px;
+
+      /* Terminal block, double-bezel. */
+      .term-shell {
+        padding: 8px;
+        border-radius: 22px;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.025);
+      }
+      .term {
+        border-radius: 15px;
+        background: #050509;
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+        overflow: hidden;
+      }
+      .term-bar {
+        display: flex;
+        gap: 7px;
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--border);
+      }
+      .dot {
+        width: 11px;
+        height: 11px;
+        border-radius: 999px;
+        background: #2a2a3a;
+      }
+      .term pre {
+        margin: 0;
+        padding: 22px 24px;
         font:
-          400 13px/1.55 'JetBrains Mono',
+          400 13.5px/1.7 'JetBrains Mono',
           monospace;
         color: var(--text);
         overflow-x: auto;
-        margin: 0 0 64px;
       }
-      .code-block .c {
+      .c {
         color: var(--muted);
       }
-      .code-block .k {
-        color: #c4a7ff;
+      .v {
+        color: var(--violet-2);
       }
+      .t {
+        color: var(--teal-2);
+      }
+      .s {
+        color: #86efac;
+      }
+
       footer {
-        border-top: 0.5px solid var(--border);
-        padding: 28px 0 48px;
+        padding: 40px 0 64px;
+        border-top: 1px solid var(--border);
         color: var(--muted);
         font-size: 13px;
-        text-align: center;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
       }
-      h2 {
-        font:
-          500 24px/1.3 Inter,
-          sans-serif;
+
+      /* Scroll-reveal: heavy fade-up with blur. */
+      .reveal {
+        opacity: 0;
+        transform: translateY(28px);
+        filter: blur(8px);
+        transition:
+          opacity 0.9s var(--ease),
+          transform 0.9s var(--ease),
+          filter 0.9s var(--ease);
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: none;
+        filter: none;
+      }
+      .reveal.d1 {
+        transition-delay: 0.08s;
+      }
+      .reveal.d2 {
+        transition-delay: 0.16s;
+      }
+      .reveal.d3 {
+        transition-delay: 0.24s;
+      }
+
+      @media (max-width: 760px) {
+        section {
+          padding: 80px 0;
+        }
+        .nav-links {
+          display: none;
+        }
+        .bento {
+          grid-template-columns: 1fr;
+        }
+        .span-3,
+        .span-2 {
+          grid-column: span 1;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .reveal {
+          opacity: 1;
+          transform: none;
+          filter: none;
+        }
+        .mesh::before,
+        .mesh::after {
+          animation: none;
+        }
       }
     </style>
   </head>
   <body>
+    <div class="mesh"></div>
+    <div class="grain"></div>
+
+    <nav class="nav">
+      <span class="brand"><b>K</b>AIROS</span>
+      <span class="nav-links">
+        <a href="#why">Why</a>
+        <a href="#start">Start</a>
+        <a href="https://github.com/your-org/kairos">GitHub</a>
+      </span>
+      <a class="nav-cta" href="https://github.com/your-org/kairos">Star on GitHub</a>
+    </nav>
+
     <div class="wrap">
-      <header>
-        <span class="wordmark"><b>K</b>AIROS</span>
-        <nav>
-          <a href="https://github.com/your-org/kairos">GitHub</a>
-          <a href="https://overflow.sui.io">Sui Overflow</a>
-        </nav>
+      <header class="hero">
+        <span class="eyebrow reveal in">Sui Overflow 2026 · Agentic Web</span>
+        <h1 class="reveal in d1">Give an LLM a <span class="grad">Sui wallet</span>.</h1>
+        <p class="reveal in d2">
+          KAIROS hands a language model a wallet, a name, and a set of actions. It signs PTBs, swaps
+          on DeepBook, keeps its memory on Walrus, and reads any object on chain. You ask in plain
+          language. It does the work and shows you the digest.
+        </p>
+        <div class="actions reveal in d3">
+          <a class="btn btn-primary" href="#start"> Build an agent <span class="pip">↗</span> </a>
+          <a class="btn btn-ghost" href="#why">See how it works</a>
+        </div>
       </header>
 
-      <section class="hero">
-        <h1>Agents that act on Sui</h1>
-        <p>
-          KAIROS is a Move-native AI agent framework for the Sui blockchain. Give an LLM a Sui
-          wallet, a personality, and a set of actions — it signs PTBs, swaps on DeepBook, stores
-          memory on Walrus, and reads any Sui object, all from natural language.
-        </p>
-        <div>
-          <a class="btn btn-primary" href="https://github.com/your-org/kairos">Get started</a>
-          <a class="btn btn-secondary" href="#how">How it works</a>
+      <section id="why">
+        <div class="section-head reveal">
+          <h2>Other chains have Eliza, AgentKit, a dozen frameworks. Sui had none.</h2>
+          <p>So we built the one that speaks Move natively. Four things make it different.</p>
+        </div>
+
+        <div class="bento">
+          <div class="shell span-3 reveal">
+            <div class="core">
+              <span class="card-k">PTB_NATIVE</span>
+              <h3>Multi-step, or nothing</h3>
+              <p>
+                Transfer, swap, stake, read objects. A swap-then-transfer is one transaction. It
+                lands whole or it doesn't land. No half-finished state to clean up, which is the
+                part EVM agents never quite solved.
+              </p>
+            </div>
+          </div>
+          <div class="shell span-3 reveal d1">
+            <div class="core">
+              <span class="card-k">WALRUS_MEMORY</span>
+              <h3>Memory it actually owns</h3>
+              <p>
+                The agent's memory sits on Walrus, not in some database you rent. Kill the process,
+                boot it back up tomorrow, and it still knows what it did. The user owns the blobs.
+                Nobody can quietly delete them.
+              </p>
+            </div>
+          </div>
+          <div class="shell span-2 reveal">
+            <div class="core">
+              <span class="card-k">20_LINES</span>
+              <h3>Actions are tiny</h3>
+              <p>
+                Write a TypeScript object. The model reads the description and decides when to call
+                it. No router. No parser. No state machine you have to babysit.
+              </p>
+            </div>
+          </div>
+          <div class="shell span-2 reveal d1">
+            <div class="core">
+              <span class="card-k">MULTI_AGENT</span>
+              <h3>Agents that coordinate</h3>
+              <p>
+                One agent writes to Walrus. Another reads it back as context. They talk through the
+                chain, never through each other's APIs, so there's no shared secret to leak.
+              </p>
+            </div>
+          </div>
+          <div class="shell span-2 reveal d2">
+            <div class="core">
+              <span class="card-k">CLAUDE</span>
+              <h3>Real tool use</h3>
+              <p>
+                Every action becomes a Claude tool. The model picks what to call, you execute it,
+                the result feeds back. That loop is the whole framework.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section class="grid">
-        <div class="card">
-          <h3>Native Sui actions</h3>
-          <p>Transfer, swap, stake, and read objects — PTBs composed and signed atomically.</p>
+      <section id="start">
+        <div class="section-head reveal">
+          <h2>Running in three commands</h2>
+          <p>Scaffold it, drop in your keys, talk to it over HTTP.</p>
         </div>
-        <div class="card">
-          <h3>User-owned memory</h3>
-          <p>
-            Agent memory lives on Walrus and survives restarts. The user owns it, not a database.
-          </p>
-        </div>
-        <div class="card">
-          <h3>20-line actions</h3>
-          <p>
-            Add a capability in a few lines of TypeScript. The LLM reads the description and calls
-            it.
-          </p>
-        </div>
-        <div class="card">
-          <h3>Multi-agent by design</h3>
-          <p>
-            Agents coordinate through Walrus and Sui objects — no direct calls, no shared secrets.
-          </p>
-        </div>
-      </section>
-
-      <section id="how">
-        <h2>Boot an agent</h2>
-        <pre class="code-block"><span class="c"># 1. Scaffold</span>
+        <div class="term-shell reveal d1">
+          <div class="term">
+            <div class="term-bar">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            </div>
+            <pre><span class="c"># scaffold a new agent</span>
 npx create-kairos-agent Atlas
 
-<span class="c"># 2. Configure and run</span>
-cd agents/atlas
-cp .env.example .env   <span class="c"># fill in your keys</span>
+<span class="c"># add your keys, then boot it</span>
+cd agents/atlas && cp .env.example .env
 pnpm install && pnpm start
 
-<span class="c"># 3. Talk to it</span>
-curl -X POST http://localhost:3000/message \
-  -H <span class="k">"Content-Type: application/json"</span> \
-  -d <span class="k">'{"text": "What is my SUI balance?", "userId": "alice"}'</span></pre>
+<span class="c"># ask it something</span>
+curl -X POST localhost:3000/message \
+  -H <span class="t">"Content-Type: application/json"</span> \
+  -d <span class="s">'{"text": "what is my SUI balance?", "userId": "alice"}'</span></pre>
+          </div>
+        </div>
       </section>
 
-      <footer>Made for Sui Overflow 2026 · Agentic Web track · MIT licensed</footer>
+      <footer>
+        <span>MIT licensed. Fork it, ship it.</span>
+        <span>Built for Sui Overflow 2026</span>
+      </footer>
     </div>
+
+    <script>
+      // Scroll reveals via IntersectionObserver (no scroll listeners).
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add('in');
+              io.unobserve(e.target);
+            }
+          }
+        },
+        { threshold: 0.15 },
+      );
+      document.querySelectorAll('.reveal:not(.in)').forEach((el) => io.observe(el));
+    </script>
   </body>
 </html>

@@ -1,12 +1,12 @@
 # Multi-agent coordination
 
-> Agents coordinate by writing to Walrus and Sui shared objects, then reading them back. No agent calls another agent's API. No shared secret. Coordination is durable, public, and verifiable on-chain.
+> Agents don't call each other. One writes a blob to Walrus and notes where it put it; another reads that note and picks the blob up. The handoff happens on chain, in the open, with nothing shared between the two processes but a blob format and an object id.
 
 ---
 
 ## The pattern
 
-One agent produces state; another consumes it. The producer stores a blob on Walrus and records its blob id where the consumer can find it (a Sui shared object, or a known Walrus index). The consumer reads the latest blob id, fetches the blob, and injects it as context.
+One agent produces state. Another consumes it. The producer stores a blob on Walrus and records the blob id somewhere the consumer knows to look: a Sui shared object, or just the local index. The consumer reads the latest id, fetches the blob, and folds it into its own context.
 
 ```
 Oracle (producer)                         Atlas (consumer)
@@ -19,7 +19,7 @@ Oracle (producer)                         Atlas (consumer)
      │                                          └─ inject summary into State.additionalContext
 ```
 
-The two agents never talk directly. The only contract between them is the shape of the blob and the id of the shared object.
+Neither process ever talks to the other. The only thing they agree on is the shape of the blob and the id of the object that points at it. Change either side's internals all you want; the contract holds.
 
 ---
 
@@ -27,31 +27,31 @@ The two agents never talk directly. The only contract between them is the shape 
 
 | Agent | Role | What it does |
 |---|---|---|
-| **Oracle** | Producer | On an interval, writes a market summary to Walrus and records the blob id on-chain. |
-| **Atlas** | Consumer | Before acting, reads Oracle's latest blob and uses it as decision context. |
-| **Sentinel** | Watcher | Reads the same state and raises alerts (Telegram, log) when a threshold is crossed. |
+| Oracle | Producer | Writes a market summary to Walrus on an interval and records the blob id on chain. |
+| Atlas | Consumer | Reads Oracle's latest blob before it acts and uses it as decision context. |
+| Sentinel | Watcher | Reads the same state and raises an alert when something crosses a threshold. |
 
 ---
 
-## Producer side — write and record
+## Producer side: write and record
 
 ```typescript
 import { getStore } from '@kairos/plugin-walrus';
 
-// 1. Store the payload on Walrus.
+// Store the payload on Walrus.
 const store = getStore();
 const record = await store!.store(JSON.stringify(summary), 'price-summary');
 
-// 2. Record the blob id where consumers can find it.
-//    Default: the local persisted index (single host).
-//    Trust-minimised: a Sui shared object — see "On-chain index" below.
+// Then record the blob id where consumers will look for it. The local index is
+// fine on one host. For coordination across machines, write it to a Sui shared
+// object (see "On-chain index" below).
 ```
 
 ---
 
-## Consumer side — read and inject
+## Consumer side: read and inject
 
-A consumer reads the latest blob and surfaces it through a provider, so it lands in every LLM call automatically:
+The cleanest way to consume is a provider. Providers run before every message, so Oracle's freshest output is already in context by the time Atlas reasons. No polling loop, no extra call:
 
 ```typescript
 import type { Provider } from '@kairos/core';
@@ -69,15 +69,15 @@ export const oracleContextProvider: Provider = {
 };
 ```
 
-Because providers run before every message (see [WRITING_PROVIDERS.md](WRITING_PROVIDERS.md)), Atlas always reasons over Oracle's freshest output without any direct call between them.
+See [WRITING_PROVIDERS.md](WRITING_PROVIDERS.md) for the provider contract.
 
 ---
 
 ## On-chain index
 
-The local persisted index in `WalrusMemoryStore` is enough for a single host. For trust-minimised coordination — where any agent instance can reconstruct the shared state from the chain — record blob ids in a Sui shared object instead.
+The local index in `WalrusMemoryStore` works when one host runs the agent. It doesn't help when a second machine, or a different agent entirely, needs to reconstruct that state from scratch. For that, put the blob ids on chain.
 
-KAIROS ships the Move source for this in [`packages/plugin-walrus/move/`](../packages/plugin-walrus/move/). It defines a shared `MemoryIndex` holding a `Table<address, vector<BlobRecord>>` that maps each agent address to its list of `{ blobId, conversationId, timestamp }` records.
+The Move source lives in [`packages/plugin-walrus/move/`](../packages/plugin-walrus/move/). It's a shared `MemoryIndex` holding a `Table<address, vector<BlobRecord>>`: one entry per agent address, each a list of `{ blobId, conversationId, timestamp }`. Anyone can read it; only the sender writes their own slot.
 
 Deploy it, then register a blob id after each store:
 
@@ -97,23 +97,21 @@ tx.moveCall({
 await suiClient.signAndExecuteTransaction({ signer: keypair, transaction: tx });
 ```
 
-A consumer reads the producer's records back with a `devInspectTransactionBlock` call to `index::records_for(index, producerAddress)`, takes the newest `blobId`, and fetches it from the Walrus aggregator.
-
-See [`packages/plugin-walrus/move/README.md`](../packages/plugin-walrus/move/README.md) for build and publish steps.
+A consumer reads the producer's records with a `devInspectTransactionBlock` call to `index::records_for(index, producerAddress)`, grabs the newest `blobId`, and pulls it from the Walrus aggregator. Build and publish steps are in [`packages/plugin-walrus/move/README.md`](../packages/plugin-walrus/move/README.md).
 
 ---
 
 ## Running the demo
 
 ```bash
-# Terminal 1 — Oracle writes a price summary to Walrus every interval.
+# Oracle writes a price summary to Walrus every interval.
 cd agents/oracle && pnpm start
 
-# Terminal 2 — Atlas reads Oracle's latest summary as context.
-cd agents/atlas && pnpm start    # or the example agent
+# Atlas reads Oracle's latest summary as context.
+cd agents/example && pnpm start
 
-# Terminal 3 — Sentinel watches and alerts.
+# Sentinel watches and alerts.
 cd agents/sentinel && pnpm start
 ```
 
-Three agents, two coordinating through Walrus and Sui, zero direct calls between them.
+Three agents. Two of them coordinating through Walrus and Sui, zero calls between them.
