@@ -8,19 +8,24 @@ A line-by-line runbook for taking an agent from your laptop to a live service, p
 
 ## 0. Get your keys (once)
 
+You need exactly two secrets: a Sui private key and an Anthropic API key. Walrus needs no key or account; KAIROS uses its public testnet endpoints, which are already filled into `.env.example`.
+
 ```bash
-# 1. Create a fresh Sui keypair for the agent
-sui client new-address ed25519
-#    note the address it prints
+# 1. Install deps (also needed to generate a key)
+pnpm install
 
-# 2. Export the private key (the suiprivkey1... string)
-sui keytool export --key-identity <alias>
+# 2. Generate a fresh Sui wallet. No Sui CLI required.
+pnpm wallet
+#    prints an Address and a suiprivkey1... key. Copy both.
 
-# 3. Fund it on testnet
-#    paste the address at https://faucet.testnet.sui.io
+# 3. Fund the address with free testnet SUI
+#    open https://faucet.sui.io, choose Testnet, paste the address.
 
-# 4. Get an Anthropic API key at https://console.anthropic.com  (starts sk-ant-)
+# 4. Get an Anthropic API key at https://console.anthropic.com
+#    create a key (starts sk-ant-). This one is paid; add billing.
 ```
+
+> If you already use the Sui CLI, `sui keytool export --key-identity <alias>` gives the same `suiprivkey1...` string. The CLI is only required later for publishing the Move index.
 
 ---
 

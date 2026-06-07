@@ -17,6 +17,7 @@
     "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",
     "typecheck": "pnpm -r typecheck",
+    "wallet": "node scripts/new-wallet.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "clean": "pnpm -r clean && rm -rf node_modules"
@@ -26,6 +27,7 @@
     "pnpm": ">=9"
   },
   "devDependencies": {
+    "@mysten/sui": "^1.45.0",
     "@types/node": "^22.0.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",

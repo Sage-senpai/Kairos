@@ -11,6 +11,9 @@ importers:
 
   .:
     devDependencies:
+      '@mysten/sui':
+        specifier: ^1.45.0
+        version: 1.45.2(typescript@5.9.3)
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.20
