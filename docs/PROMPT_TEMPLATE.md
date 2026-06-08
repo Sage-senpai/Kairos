@@ -1,6 +1,6 @@
 # System prompt template
 
-> This is the master template used by `LLMProvider.buildSystemPrompt()` in `@kairos/core`. Understanding it is key to understanding why agents behave as they do — and how to tune them.
+> This is the master template used by `LLMProvider.buildSystemPrompt()` in `@kairos-sui/core`. Understanding it is key to understanding why agents behave as they do — and how to tune them.
 
 ---
 
@@ -175,7 +175,7 @@ If the agent behaves unexpectedly:
 To inspect the compiled prompt without running the agent:
 
 ```typescript
-import { AgentRuntime } from '@kairos/core';
+import { AgentRuntime } from '@kairos-sui/core';
 // ... setup
 const state = await runtime['buildState'](mockMessage);
 const prompt = runtime['llm']['buildSystemPrompt'](state);

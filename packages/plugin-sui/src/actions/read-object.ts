@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import type { Action } from '@kairos/core';
-import { truncateAddress } from '@kairos/core';
+import type { Action } from '@kairos-sui/core';
+import { truncateAddress } from '@kairos-sui/core';
 
 const paramsSchema = z.object({
   objectId: z.string().regex(/^0x[0-9a-fA-F]{1,64}$/, 'objectId must be a 0x-prefixed object id'),

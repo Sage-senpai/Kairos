@@ -1,6 +1,6 @@
 import { Transaction, coinWithBalance } from '@mysten/sui/transactions';
 import { z } from 'zod';
-import type { Action, SuiNetwork } from '@kairos/core';
+import type { Action, SuiNetwork } from '@kairos-sui/core';
 
 /**
  * DeepBook v3 on-chain package ids and the DEEP coin type, per network.

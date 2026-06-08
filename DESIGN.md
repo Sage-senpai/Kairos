@@ -252,10 +252,10 @@ Minimum clear space around the logo: equal to the height of the letter `A` in th
 
 ## CLI output conventions
 
-The KAIROS framework emits structured CLI output. Use the `logger` utility in `@kairos/core`:
+The KAIROS framework emits structured CLI output. Use the `logger` utility in `@kairos-sui/core`:
 
 ```typescript
-import { logger } from '@kairos/core';
+import { logger } from '@kairos-sui/core';
 
 logger.info('Agent "Atlas" booted');        // → [KAIROS] Agent "Atlas" booted
 logger.action('TRANSFER_SUI executing...');  // → [ACTION] TRANSFER_SUI executing...
@@ -309,7 +309,7 @@ For hackathon presentations:
 
 | Thing | Convention | Example |
 |---|---|---|
-| npm package | `@kairos/name` | `@kairos/plugin-sui` |
+| npm package | `@kairos-sui/name` | `@kairos-sui/plugin-sui` |
 | Action names | `SCREAMING_SNAKE_CASE` | `TRANSFER_SUI` |
 | Plugin names | `kebab-case` | `plugin-walrus` |
 | Classes | `PascalCase` | `AgentRuntime` |

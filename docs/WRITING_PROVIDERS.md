@@ -30,7 +30,7 @@ That is the entire interface. Return a string. The string gets concatenated into
 
 ```typescript
 // packages/plugin-sui/src/providers/nfts.ts
-import type { Provider } from '@kairos/core';
+import type { Provider } from '@kairos-sui/core';
 
 export const ownedNftsProvider: Provider = {
   get: async (runtime) => {
@@ -72,7 +72,7 @@ Owned NFTs (3): Sui Name Service (0x1234...abcd), DeepBook Badge (0x5678...ef01)
 
 ```typescript
 // packages/plugin-sui/src/providers/pool-depth.ts
-import type { Provider } from '@kairos/core';
+import type { Provider } from '@kairos-sui/core';
 
 // Pool IDs on mainnet — update as new pools are added
 const POOLS = {
@@ -157,7 +157,7 @@ Providers are pure async functions — they are the easiest thing to test:
 ```typescript
 import { describe, it, expect, vi } from 'vitest';
 import { balanceProvider } from '../providers/balance';
-import type { AgentRuntime } from '@kairos/core';
+import type { AgentRuntime } from '@kairos-sui/core';
 
 const mockRuntime = {
   suiAddress: '0x' + '1'.repeat(64),

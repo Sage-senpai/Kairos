@@ -1,10 +1,10 @@
 import 'dotenv/config';
 import { readFileSync } from 'node:fs';
-import { AgentRuntime, logger, type Character } from '@kairos/core';
-import { suiPlugin } from '@kairos/plugin-sui';
-import { walrusPlugin } from '@kairos/plugin-walrus';
-import { createRestServer } from '@kairos/client-rest';
-import { createTelegramClient } from '@kairos/client-telegram';
+import { AgentRuntime, logger, type Character } from '@kairos-sui/core';
+import { suiPlugin } from '@kairos-sui/plugin-sui';
+import { walrusPlugin } from '@kairos-sui/plugin-walrus';
+import { createRestServer } from '@kairos-sui/client-rest';
+import { createTelegramClient } from '@kairos-sui/client-telegram';
 
 const REQUIRED_ENV = ['SUI_PRIVATE_KEY', 'ANTHROPIC_API_KEY'] as const;
 

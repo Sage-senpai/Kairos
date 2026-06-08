@@ -1,5 +1,5 @@
 {
-  "name": "@kairos/plugin-sui",
+  "name": "@kairos-sui/plugin-sui",
   "version": "0.1.0",
   "description": "KAIROS Sui plugin — transfer, swap, stake, read-object actions and balance/price providers.",
   "license": "MIT",
@@ -25,7 +25,7 @@
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
   },
   "dependencies": {
-    "@kairos/core": "workspace:*",
+    "@kairos-sui/core": "workspace:*",
     "@mysten/sui": "^1.45.0",
     "zod": "^4.4.0"
   },

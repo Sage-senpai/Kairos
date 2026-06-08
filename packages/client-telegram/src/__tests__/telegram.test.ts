@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { processUpdate, sendMessage } from '../index';
-import type { IAgentRuntime } from '@kairos/core';
+import type { IAgentRuntime } from '@kairos-sui/core';
 
 function makeRuntime(reply = 'pong'): IAgentRuntime {
   return {

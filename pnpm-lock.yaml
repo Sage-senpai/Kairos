@@ -41,16 +41,16 @@ importers:
 
   agents/example:
     dependencies:
-      '@kairos/client-rest':
+      '@kairos-sui/client-rest':
         specifier: workspace:*
         version: link:../../packages/client-rest
-      '@kairos/core':
+      '@kairos-sui/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@kairos/plugin-sui':
+      '@kairos-sui/plugin-sui':
         specifier: workspace:*
         version: link:../../packages/plugin-sui
-      '@kairos/plugin-walrus':
+      '@kairos-sui/plugin-walrus':
         specifier: workspace:*
         version: link:../../packages/plugin-walrus
       dotenv:
@@ -63,16 +63,16 @@ importers:
 
   agents/oracle:
     dependencies:
-      '@kairos/client-rest':
+      '@kairos-sui/client-rest':
         specifier: workspace:*
         version: link:../../packages/client-rest
-      '@kairos/core':
+      '@kairos-sui/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@kairos/plugin-sui':
+      '@kairos-sui/plugin-sui':
         specifier: workspace:*
         version: link:../../packages/plugin-sui
-      '@kairos/plugin-walrus':
+      '@kairos-sui/plugin-walrus':
         specifier: workspace:*
         version: link:../../packages/plugin-walrus
       dotenv:
@@ -85,19 +85,19 @@ importers:
 
   agents/sentinel:
     dependencies:
-      '@kairos/client-rest':
+      '@kairos-sui/client-rest':
         specifier: workspace:*
         version: link:../../packages/client-rest
-      '@kairos/client-telegram':
+      '@kairos-sui/client-telegram':
         specifier: workspace:*
         version: link:../../packages/client-telegram
-      '@kairos/core':
+      '@kairos-sui/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@kairos/plugin-sui':
+      '@kairos-sui/plugin-sui':
         specifier: workspace:*
         version: link:../../packages/plugin-sui
-      '@kairos/plugin-walrus':
+      '@kairos-sui/plugin-walrus':
         specifier: workspace:*
         version: link:../../packages/plugin-walrus
       dotenv:
@@ -110,7 +110,7 @@ importers:
 
   packages/client-rest:
     dependencies:
-      '@kairos/core':
+      '@kairos-sui/core':
         specifier: workspace:*
         version: link:../core
       express:
@@ -126,7 +126,7 @@ importers:
 
   packages/client-telegram:
     dependencies:
-      '@kairos/core':
+      '@kairos-sui/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -147,7 +147,7 @@ importers:
 
   packages/plugin-sui:
     dependencies:
-      '@kairos/core':
+      '@kairos-sui/core':
         specifier: workspace:*
         version: link:../core
       '@mysten/sui':
@@ -159,7 +159,7 @@ importers:
 
   packages/plugin-walrus:
     dependencies:
-      '@kairos/core':
+      '@kairos-sui/core':
         specifier: workspace:*
         version: link:../core
       zod:

@@ -10,13 +10,13 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ### Added
 - Initial monorepo setup with pnpm workspaces, tsup builds, Vitest, and ESLint flat config
-- `@kairos/core` — `AgentRuntime` with tool-use loop, `MemoryManager`, `LLMProvider` (Anthropic SDK), `logger`, and all shared interfaces in `types.ts`
-- `@kairos/plugin-sui` — TRANSFER_SUI, SWAP_TOKENS (DeepBook v3), STAKE_SUI, READ_OBJECT, GET_OWNED_OBJECTS actions
-- `@kairos/plugin-sui` — balanceProvider, priceProvider (Pyth Hermes)
-- `@kairos/plugin-walrus` — WalrusMemoryStore, STORE_ON_WALRUS action, walrusMemoryProvider, async memory persistence hook
-- `@kairos/plugin-walrus` — RETRIEVE_FROM_WALRUS action; persistent local blob index so memory survives restarts; `move/` on-chain memory index (Move source)
-- `@kairos/client-rest` — Express REST server with /message, /balance, and /health endpoints
-- `@kairos/client-telegram` — Telegram bot client
+- `@kairos-sui/core` — `AgentRuntime` with tool-use loop, `MemoryManager`, `LLMProvider` (Anthropic SDK), `logger`, and all shared interfaces in `types.ts`
+- `@kairos-sui/plugin-sui` — TRANSFER_SUI, SWAP_TOKENS (DeepBook v3), STAKE_SUI, READ_OBJECT, GET_OWNED_OBJECTS actions
+- `@kairos-sui/plugin-sui` — balanceProvider, priceProvider (Pyth Hermes)
+- `@kairos-sui/plugin-walrus` — WalrusMemoryStore, STORE_ON_WALRUS action, walrusMemoryProvider, async memory persistence hook
+- `@kairos-sui/plugin-walrus` — RETRIEVE_FROM_WALRUS action; persistent local blob index so memory survives restarts; `move/` on-chain memory index (Move source)
+- `@kairos-sui/client-rest` — Express REST server with /message, /balance, and /health endpoints
+- `@kairos-sui/client-telegram` — Telegram bot client
 - `create-kairos-agent` — CLI scaffolder for new agents
 - Example agents: Atlas, Oracle (publishes summaries to Walrus), Sentinel (Telegram alerts)
 - Static website under `site/` using the KAIROS design system

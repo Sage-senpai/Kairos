@@ -2,7 +2,7 @@
  * Shared KAIROS types. Every cross-package type lives here - no type is defined
  * in a plugin. If a plugin needs a new type, propose it for core first.
  *
- * `@kairos/core` carries no blockchain logic; the only blockchain references here
+ * `@kairos-sui/core` carries no blockchain logic; the only blockchain references here
  * are type-only imports used to give plugin authors typed access to the Sui client
  * and keypair the runtime holds. They are erased at build time.
  */

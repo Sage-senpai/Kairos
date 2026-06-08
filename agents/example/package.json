@@ -1,5 +1,5 @@
 {
-  "name": "@kairos/agent-example",
+  "name": "@kairos-sui/agent-example",
   "version": "0.0.1",
   "private": true,
   "description": "Atlas — the reference KAIROS agent.",
@@ -10,10 +10,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@kairos/client-rest": "workspace:*",
-    "@kairos/core": "workspace:*",
-    "@kairos/plugin-sui": "workspace:*",
-    "@kairos/plugin-walrus": "workspace:*",
+    "@kairos-sui/client-rest": "workspace:*",
+    "@kairos-sui/core": "workspace:*",
+    "@kairos-sui/plugin-sui": "workspace:*",
+    "@kairos-sui/plugin-walrus": "workspace:*",
     "dotenv": "^17.4.0"
   },
   "devDependencies": {

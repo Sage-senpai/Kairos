@@ -1,5 +1,5 @@
-import type { Provider } from '@kairos/core';
-import { formatSui, truncateAddress } from '@kairos/core';
+import type { Provider } from '@kairos-sui/core';
+import { formatSui, truncateAddress } from '@kairos-sui/core';
 
 const SUI_COIN_TYPE = '0x2::sui::SUI';
 

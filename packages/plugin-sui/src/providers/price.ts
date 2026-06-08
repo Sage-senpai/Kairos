@@ -1,4 +1,4 @@
-import type { Provider } from '@kairos/core';
+import type { Provider } from '@kairos-sui/core';
 
 const HERMES_ENDPOINT = 'https://hermes.pyth.network/v2/updates/price/latest';
 

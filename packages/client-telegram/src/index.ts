@@ -1,5 +1,5 @@
-import type { IAgentRuntime } from '@kairos/core';
-import { logger } from '@kairos/core';
+import type { IAgentRuntime } from '@kairos-sui/core';
+import { logger } from '@kairos-sui/core';
 
 /** Minimal subset of the Telegram update shape we consume. */
 interface TelegramUpdate {

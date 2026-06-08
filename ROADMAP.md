@@ -73,12 +73,12 @@ Win first place in the Agentic Web track by building the **definitive AI agent f
 - [ ] CLI scaffolding tool: `npx create-kairos-agent`
   - Generates `character.json`, `index.ts`, `.env.example` from prompts
 - [ ] Plugin interface finalised — external devs can build plugins
-- [ ] Publish `@kairos/core`, `@kairos/plugin-sui`, `@kairos/plugin-walrus` to npm
+- [ ] Publish `@kairos-sui/core`, `@kairos-sui/plugin-sui`, `@kairos-sui/plugin-walrus` to npm
 - [ ] Documentation: `WRITING_ACTIONS.md`, `WRITING_PROVIDERS.md`, `BUILDING_AGENTS.md` complete
 - [ ] KAIROS website (static HTML, dark, KAIROS design system) deployed to Walrus
 
 ### Week 6
-- [ ] Telegram client (`@kairos/client-telegram`)
+- [ ] Telegram client (`@kairos-sui/client-telegram`)
 - [ ] Example: **Sentinel agent** — DeFi monitoring agent that sends Telegram alerts when DeepBook price moves >5%
 - [ ] Example: **Oracle agent** — writes hourly price summaries to Walrus, indexed onchain
 - [ ] Example: **Atlas agent** — reads Oracle's latest summary for context, executes rebalancing
@@ -95,7 +95,7 @@ Win first place in the Agentic Web track by building the **definitive AI agent f
 ### Week 7
 - [ ] Demo script written and rehearsed 5+ times
 - [ ] Mainnet agent deployed (small amounts, real money, real stakes)
-- [ ] `@kairos/core` README polished — must convey full value in 30 seconds of reading
+- [ ] `@kairos-sui/core` README polished — must convey full value in 30 seconds of reading
 - [ ] GitHub repository: star-worthy README, clean commit history, tagged releases
 - [ ] Hackathon submission text written (devfolio)
 - [ ] 60-second video walkthrough recorded

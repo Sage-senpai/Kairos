@@ -43,10 +43,10 @@ function characterJson(name: string, network: AgentNetwork, plugins: string[]): 
 
 const INDEX_TS = `import 'dotenv/config';
 import { readFileSync } from 'node:fs';
-import { AgentRuntime, logger, type Character } from '@kairos/core';
-import { suiPlugin } from '@kairos/plugin-sui';
-import { walrusPlugin } from '@kairos/plugin-walrus';
-import { createRestServer } from '@kairos/client-rest';
+import { AgentRuntime, logger, type Character } from '@kairos-sui/core';
+import { suiPlugin } from '@kairos-sui/plugin-sui';
+import { walrusPlugin } from '@kairos-sui/plugin-walrus';
+import { createRestServer } from '@kairos-sui/client-rest';
 
 const REQUIRED_ENV = ['SUI_PRIVATE_KEY', 'ANTHROPIC_API_KEY'] as const;
 
@@ -94,16 +94,16 @@ function packageJson(name: string): string {
       .replace(/^-|-$/g, '') || 'agent';
   return `${JSON.stringify(
     {
-      name: `@kairos/agent-${pkgName}`,
+      name: `@kairos-sui/agent-${pkgName}`,
       version: '0.0.1',
       private: true,
       type: 'module',
       scripts: { start: 'tsx index.ts', dev: 'tsx watch index.ts', typecheck: 'tsc --noEmit' },
       dependencies: {
-        '@kairos/client-rest': '^0.1.0',
-        '@kairos/core': '^0.1.0',
-        '@kairos/plugin-sui': '^0.1.0',
-        '@kairos/plugin-walrus': '^0.1.0',
+        '@kairos-sui/client-rest': '^0.1.0',
+        '@kairos-sui/core': '^0.1.0',
+        '@kairos-sui/plugin-sui': '^0.1.0',
+        '@kairos-sui/plugin-walrus': '^0.1.0',
         dotenv: '^17.4.0',
       },
       devDependencies: { tsx: '^4.19.0' },

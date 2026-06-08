@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { balanceProvider } from '../providers/balance';
-import type { AgentRuntime, Memory } from '@kairos/core';
+import type { AgentRuntime, Memory } from '@kairos-sui/core';
 
 const mockRuntime = {
   suiAddress: '0x' + '1'.repeat(64),

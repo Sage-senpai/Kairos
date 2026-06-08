@@ -1,5 +1,5 @@
 {
-  "name": "@kairos/agent-sentinel",
+  "name": "@kairos-sui/agent-sentinel",
   "version": "0.0.1",
   "private": true,
   "description": "Sentinel — monitors markets and alerts over Telegram.",
@@ -10,11 +10,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@kairos/client-rest": "workspace:*",
-    "@kairos/client-telegram": "workspace:*",
-    "@kairos/core": "workspace:*",
-    "@kairos/plugin-sui": "workspace:*",
-    "@kairos/plugin-walrus": "workspace:*",
+    "@kairos-sui/client-rest": "workspace:*",
+    "@kairos-sui/client-telegram": "workspace:*",
+    "@kairos-sui/core": "workspace:*",
+    "@kairos-sui/plugin-sui": "workspace:*",
+    "@kairos-sui/plugin-walrus": "workspace:*",
     "dotenv": "^17.4.0"
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
 import { Transaction } from '@mysten/sui/transactions';
 import { z } from 'zod';
-import type { Action } from '@kairos/core';
-import { suiToMist, truncateAddress } from '@kairos/core';
+import type { Action } from '@kairos-sui/core';
+import { suiToMist, truncateAddress } from '@kairos-sui/core';
 
 const paramsSchema = z.object({
   recipient: z

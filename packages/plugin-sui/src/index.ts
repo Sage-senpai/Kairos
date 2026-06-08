@@ -1,8 +1,8 @@
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import { decodeSuiPrivateKey } from '@mysten/sui/cryptography';
-import type { Plugin } from '@kairos/core';
-import { logger, truncateAddress } from '@kairos/core';
+import type { Plugin } from '@kairos-sui/core';
+import { logger, truncateAddress } from '@kairos-sui/core';
 
 import { transferSuiAction } from './actions/transfer-sui';
 import { swapTokensAction } from './actions/swap-tokens';

@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
-import type { Memory } from '@kairos/core';
-import { logger } from '@kairos/core';
+import type { Memory } from '@kairos-sui/core';
+import { logger } from '@kairos-sui/core';
 
 /** A pointer to a blob this agent has stored on Walrus. */
 export interface BlobRecord {

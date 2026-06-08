@@ -2,7 +2,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import type { AddressInfo } from 'node:net';
 import type { Server } from 'node:http';
 import { createRestServer } from '../index';
-import type { IAgentRuntime } from '@kairos/core';
+import type { IAgentRuntime } from '@kairos-sui/core';
 
 function makeRuntime(processMessage = vi.fn().mockResolvedValue('pong')): IAgentRuntime {
   return {

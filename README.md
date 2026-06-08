@@ -12,7 +12,7 @@
 **The AI agent framework built for Sui.**  
 Agents that act. Transactions that compose. Memory that persists.
 
-[![npm version](https://img.shields.io/npm/v/@kairos/core?color=7C3AED&label=@kairos/core)](https://www.npmjs.com/package/@kairos/core)
+[![npm version](https://img.shields.io/npm/v/@kairos-sui/core?color=7C3AED&label=@kairos-sui/core)](https://www.npmjs.com/package/@kairos-sui/core)
 [![License: MIT](https://img.shields.io/badge/license-MIT-2DD4BF.svg)](LICENSE)
 [![Built for Sui Overflow 2026](https://img.shields.io/badge/Sui%20Overflow-2026-4CA3FF)](https://overflow.sui.io)
 
@@ -41,11 +41,11 @@ The name comes from the Greek word *kairos* — the opportune moment, the right 
 
 | Package | Description |
 |---|---|
-| [`@kairos/core`](packages/core) | `AgentRuntime`, `MemoryManager`, `LLMProvider`, all TypeScript interfaces |
-| [`@kairos/plugin-sui`](packages/plugin-sui) | Transfer SUI, swap on DeepBook, stake, read objects, balance and price providers |
-| [`@kairos/plugin-walrus`](packages/plugin-walrus) | Persistent memory on Walrus, store/retrieve actions, on-chain index (Move) |
-| [`@kairos/client-rest`](packages/client-rest) | Express REST server — any client can talk to an agent over HTTP |
-| [`@kairos/client-telegram`](packages/client-telegram) | Telegram bot client — drive an agent from a chat |
+| [`@kairos-sui/core`](packages/core) | `AgentRuntime`, `MemoryManager`, `LLMProvider`, all TypeScript interfaces |
+| [`@kairos-sui/plugin-sui`](packages/plugin-sui) | Transfer SUI, swap on DeepBook, stake, read objects, balance and price providers |
+| [`@kairos-sui/plugin-walrus`](packages/plugin-walrus) | Persistent memory on Walrus, store/retrieve actions, on-chain index (Move) |
+| [`@kairos-sui/client-rest`](packages/client-rest) | Express REST server — any client can talk to an agent over HTTP |
+| [`@kairos-sui/client-telegram`](packages/client-telegram) | Telegram bot client — drive an agent from a chat |
 | [`create-kairos-agent`](packages/create-kairos-agent) | Scaffold a new agent with one command |
 
 ---
@@ -91,10 +91,10 @@ curl -X POST http://localhost:3000/message \
 ## Create your own agent
 
 ```typescript
-import { AgentRuntime } from '@kairos/core';
-import { suiPlugin }    from '@kairos/plugin-sui';
-import { walrusPlugin } from '@kairos/plugin-walrus';
-import { createRestServer } from '@kairos/client-rest';
+import { AgentRuntime } from '@kairos-sui/core';
+import { suiPlugin }    from '@kairos-sui/plugin-sui';
+import { walrusPlugin } from '@kairos-sui/plugin-walrus';
+import { createRestServer } from '@kairos-sui/client-rest';
 
 const runtime = new AgentRuntime({
   name: 'Atlas',
@@ -124,7 +124,7 @@ See [`docs/BUILDING_AGENTS.md`](docs/BUILDING_AGENTS.md) for the full guide.
 ## Write a custom action
 
 ```typescript
-import type { Action } from '@kairos/core';
+import type { Action } from '@kairos-sui/core';
 
 export const myAction: Action = {
   name: 'DO_SOMETHING',

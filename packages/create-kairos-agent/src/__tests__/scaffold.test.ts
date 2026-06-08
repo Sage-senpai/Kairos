@@ -52,7 +52,7 @@ describe('scaffoldAgent', () => {
     const character = JSON.parse(await readFile(join(dir, 'character.json'), 'utf8'));
     expect(character.suiNetwork).toBe('testnet');
     const pkg = JSON.parse(await readFile(join(dir, 'package.json'), 'utf8'));
-    expect(pkg.name).toBe('@kairos/agent-night-owl');
+    expect(pkg.name).toBe('@kairos-sui/agent-night-owl');
   });
 
   it('rejects an empty name', async () => {

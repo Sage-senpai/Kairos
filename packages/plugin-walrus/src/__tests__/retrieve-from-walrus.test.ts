@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { retrieveFromWalrusAction } from '../actions/retrieve-from-walrus';
 import { WalrusMemoryStore } from '../memory-store';
 import { setStore } from '../store-state';
-import type { AgentRuntime, Memory, State } from '@kairos/core';
+import type { AgentRuntime, Memory, State } from '@kairos-sui/core';
 
 const mockMemory = { content: { text: 'recall blob X' } } as Memory;
 const mockState = {} as State;

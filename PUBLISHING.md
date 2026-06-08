@@ -1,6 +1,6 @@
 # Publishing KAIROS
 
-How to get the framework onto npm so anyone can `npx create-kairos-agent` or `pnpm add @kairos/core`, and how reviewers run it without npm at all.
+How to get the framework onto npm so anyone can `npx create-kairos-agent` or `pnpm add @kairos-sui/core`, and how reviewers run it without npm at all.
 
 ---
 
@@ -34,7 +34,7 @@ This makes `npx create-kairos-agent MyAgent` work for anyone, and lets people in
 
 ### One-time: claim the scope
 
-The packages are named `@kairos/*`. To publish under that scope you need an npm org named `kairos`.
+The packages are named `@kairos-sui/*`. To publish under that scope you need an npm org named `kairos`.
 
 ```bash
 npm login
@@ -59,7 +59,7 @@ pnpm -r exec npm version patch --no-git-tag-version
 pnpm -r publish --access public --no-git-checks
 ```
 
-That publishes `@kairos/core`, `@kairos/plugin-sui`, `@kairos/plugin-walrus`, `@kairos/client-rest`, `@kairos/client-telegram`, and `create-kairos-agent`. The private agents under `agents/` are skipped (they are marked `private`).
+That publishes `@kairos-sui/core`, `@kairos-sui/plugin-sui`, `@kairos-sui/plugin-walrus`, `@kairos-sui/client-rest`, `@kairos-sui/client-telegram`, and `create-kairos-agent`. The private agents under `agents/` are skipped (they are marked `private`).
 
 ### After publishing
 
@@ -71,7 +71,7 @@ cp .env.example .env        # add the two keys
 pnpm install && pnpm start
 ```
 
-The scaffolded agent pulls `@kairos/*` from npm (it references `^0.1.0`, not the workspace), so it works as a standalone project outside this repo.
+The scaffolded agent pulls `@kairos-sui/*` from npm (it references `^0.1.0`, not the workspace), so it works as a standalone project outside this repo.
 
 ---
 

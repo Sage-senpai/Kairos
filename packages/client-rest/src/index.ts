@@ -1,7 +1,7 @@
 import express, { type Request, type Response } from 'express';
 import type { Server } from 'node:http';
-import type { IAgentRuntime } from '@kairos/core';
-import { formatSui, logger } from '@kairos/core';
+import type { IAgentRuntime } from '@kairos-sui/core';
+import { formatSui, logger } from '@kairos-sui/core';
 
 interface MessageBody {
   text?: unknown;

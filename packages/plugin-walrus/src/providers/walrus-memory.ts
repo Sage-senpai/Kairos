@@ -1,4 +1,4 @@
-import type { Provider } from '@kairos/core';
+import type { Provider } from '@kairos-sui/core';
 import { getStore } from '../store-state';
 
 const MAX_INJECTED = 5;

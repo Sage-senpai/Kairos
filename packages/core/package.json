@@ -1,5 +1,5 @@
 {
-  "name": "@kairos/core",
+  "name": "@kairos-sui/core",
   "version": "0.1.0",
   "description": "KAIROS core — AgentRuntime, MemoryManager, LLMProvider, and shared types.",
   "license": "MIT",

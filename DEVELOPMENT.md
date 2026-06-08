@@ -196,12 +196,12 @@ kairos/
 ├── .prettierrc           # shared Prettier config
 └── packages/
     ├── core/
-    │   ├── package.json  # name: "@kairos/core"
+    │   ├── package.json  # name: "@kairos-sui/core"
     │   ├── tsconfig.json # extends ../../tsconfig.base.json
     │   └── src/
     ├── plugin-sui/
-    │   ├── package.json  # name: "@kairos/plugin-sui"
-    │   │                 # dependencies: { "@kairos/core": "workspace:*" }
+    │   ├── package.json  # name: "@kairos-sui/plugin-sui"
+    │   │                 # dependencies: { "@kairos-sui/core": "workspace:*" }
     │   └── src/
     └── ...
 ```
@@ -266,7 +266,7 @@ pnpm test:ui        # browser test UI (useful for debugging)
 
 ```typescript
 import { vi, describe, it, expect } from 'vitest';
-import { AgentRuntime } from '@kairos/core';
+import { AgentRuntime } from '@kairos-sui/core';
 import { transferSuiAction } from '../actions/transfer';
 
 const mockRuntime = {
@@ -375,7 +375,7 @@ walrus blob-status <blobId>
 
 ## Common issues
 
-**`Error: Cannot find module '@kairos/core'`**  
+**`Error: Cannot find module '@kairos-sui/core'`**  
 Run `pnpm build` from the repo root first. The workspace packages need to be compiled before they can be imported.
 
 **`Error: Invalid private key`**  

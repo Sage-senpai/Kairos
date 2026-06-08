@@ -76,12 +76,12 @@ Before writing any code, answer:
 ```typescript
 // agents/my-agent/index.ts
 import 'dotenv/config';
-import { AgentRuntime } from '@kairos/core';
-import { suiPlugin }    from '@kairos/plugin-sui';
-import { walrusPlugin } from '@kairos/plugin-walrus';
-import { createRestServer } from '@kairos/client-rest';
+import { AgentRuntime } from '@kairos-sui/core';
+import { suiPlugin }    from '@kairos-sui/plugin-sui';
+import { walrusPlugin } from '@kairos-sui/plugin-walrus';
+import { createRestServer } from '@kairos-sui/client-rest';
 import characterFile from './character.json';
-import type { Character } from '@kairos/core';
+import type { Character } from '@kairos-sui/core';
 
 // Resolve ${VAR} placeholders from env
 function resolveCharacter(raw: typeof characterFile): Character {
@@ -123,8 +123,8 @@ If your agent needs to do something the built-in actions don't cover, add a cust
 
 ```typescript
 import { myCustomAction } from './actions/my-custom-action';
-import { suiPlugin }      from '@kairos/plugin-sui';
-import type { Plugin }    from '@kairos/core';
+import { suiPlugin }      from '@kairos-sui/plugin-sui';
+import type { Plugin }    from '@kairos-sui/core';
 
 // Extend the built-in plugin with your custom action
 const extendedSuiPlugin: Plugin = {

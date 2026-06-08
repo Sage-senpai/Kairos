@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { readObjectAction } from '../actions/read-object';
-import type { AgentRuntime, Memory, State } from '@kairos/core';
+import type { AgentRuntime, Memory, State } from '@kairos-sui/core';
 
 const mockMemory: Memory = {
   id: 'test-id',

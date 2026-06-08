@@ -36,7 +36,7 @@ Neither process ever talks to the other. The only thing they agree on is the sha
 ## Producer side: write and record
 
 ```typescript
-import { getStore } from '@kairos/plugin-walrus';
+import { getStore } from '@kairos-sui/plugin-walrus';
 
 // Store the payload on Walrus.
 const store = getStore();
@@ -54,8 +54,8 @@ const record = await store!.store(JSON.stringify(summary), 'price-summary');
 The cleanest way to consume is a provider. Providers run before every message, so Oracle's freshest output is already in context by the time Atlas reasons. No polling loop, no extra call:
 
 ```typescript
-import type { Provider } from '@kairos/core';
-import { getStore } from '@kairos/plugin-walrus';
+import type { Provider } from '@kairos-sui/core';
+import { getStore } from '@kairos-sui/plugin-walrus';
 
 export const oracleContextProvider: Provider = {
   get: async () => {

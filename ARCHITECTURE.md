@@ -33,27 +33,27 @@ Client (REST, Telegram, CLI, another agent)
 ## Package dependency graph
 
 ```
-@kairos/client-rest
+@kairos-sui/client-rest
         │
-        └── @kairos/core
+        └── @kairos-sui/core
                 │
-@kairos/plugin-sui ──── @kairos/core
+@kairos-sui/plugin-sui ──── @kairos-sui/core
         │
         └── @mysten/sui
             @mysten/deepbook-v3
 
-@kairos/plugin-walrus ── @kairos/core
+@kairos-sui/plugin-walrus ── @kairos-sui/core
 ```
 
 Rules:
-- Plugins depend on `@kairos/core` — never the reverse.
+- Plugins depend on `@kairos-sui/core` — never the reverse.
 - Plugins do not depend on each other.
-- Clients depend only on `@kairos/core` (via `AgentRuntime`).
-- `@kairos/core` has zero blockchain dependencies.
+- Clients depend only on `@kairos-sui/core` (via `AgentRuntime`).
+- `@kairos-sui/core` has zero blockchain dependencies.
 
 ---
 
-## Core package — `@kairos/core`
+## Core package — `@kairos-sui/core`
 
 ### `AgentRuntime`
 

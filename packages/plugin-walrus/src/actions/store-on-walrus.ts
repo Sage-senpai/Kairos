@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { Action } from '@kairos/core';
+import type { Action } from '@kairos-sui/core';
 import { getStore } from '../store-state';
 
 const paramsSchema = z.object({

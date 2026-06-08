@@ -1,4 +1,4 @@
-/** Public surface of `@kairos/core`. */
+/** Public surface of `@kairos-sui/core`. */
 export { AgentRuntime } from './runtime';
 export { MemoryManager } from './memory';
 export { LLMProvider } from './llm';

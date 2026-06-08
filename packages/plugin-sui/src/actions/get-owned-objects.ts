@@ -1,5 +1,5 @@
-import type { Action } from '@kairos/core';
-import { truncateAddress } from '@kairos/core';
+import type { Action } from '@kairos-sui/core';
+import { truncateAddress } from '@kairos-sui/core';
 
 const MAX_LISTED = 50;
 

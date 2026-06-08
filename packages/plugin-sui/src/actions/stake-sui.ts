@@ -1,7 +1,7 @@
 import { Transaction } from '@mysten/sui/transactions';
 import { z } from 'zod';
-import type { Action } from '@kairos/core';
-import { suiToMist, truncateAddress } from '@kairos/core';
+import type { Action } from '@kairos-sui/core';
+import { suiToMist, truncateAddress } from '@kairos-sui/core';
 
 const SUI_SYSTEM_STATE_ID = '0x0000000000000000000000000000000000000000000000000000000000000005';
 const STAKE_FUNCTION = '0x3::sui_system::request_add_stake';

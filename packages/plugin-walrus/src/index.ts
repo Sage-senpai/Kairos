@@ -1,6 +1,6 @@
 import { join } from 'node:path';
-import type { Plugin } from '@kairos/core';
-import { logger } from '@kairos/core';
+import type { Plugin } from '@kairos-sui/core';
+import { logger } from '@kairos-sui/core';
 import { WalrusMemoryStore } from './memory-store';
 import { setStore } from './store-state';
 import { storeOnWalrusAction } from './actions/store-on-walrus';

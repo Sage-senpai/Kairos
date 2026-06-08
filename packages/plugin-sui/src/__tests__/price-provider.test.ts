@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { priceProvider } from '../providers/price';
-import type { AgentRuntime, Memory } from '@kairos/core';
+import type { AgentRuntime, Memory } from '@kairos-sui/core';
 
 const runtime = {} as unknown as AgentRuntime;
 
